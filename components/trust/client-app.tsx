@@ -654,19 +654,9 @@ const DEMO_REPO_RESULT: RepoScanResult = {
 
 export type AppState = "landing" | "scanning" | "dashboard" | "mcp";
 
-function normalizeUrl(url: string): string {
-  try {
-    const u = new URL(url.trim().toLowerCase());
-    return u.origin + u.pathname.replace(/\/$/, "");
-  } catch {
-    return url.trim().toLowerCase();
-  }
-}
-
 function isDemoTarget(target: string): boolean {
-  const demo = normalizeUrl(DEMO_URL);
-  const input = normalizeUrl(target);
-  return input === demo || input === demo.replace(/\/$/, "");
+  const t = target.trim().toLowerCase();
+  return t.includes("lingscars.com") || t.includes("projectdiscovery/nuclei");
 }
 
 function CheckoutHandler({ onMessage }: { onMessage: (msg: string | null) => void }) {

@@ -16,7 +16,7 @@ RUN nuclei -update-templates \
 
 # Katana
 RUN wget -q https://github.com/projectdiscovery/katana/releases/download/v1.1.0/katana_1.1.0_linux_amd64.zip \
-    && unzip -q katana_1.1.0_linux_amd64.zip \
+    && unzip -oq katana_1.1.0_linux_amd64.zip \
     && mv katana /usr/local/bin/ \
     && rm -f katana_1.1.0_linux_amd64.zip LICENSE.md README.md \
     && katana -version
