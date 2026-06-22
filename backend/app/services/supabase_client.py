@@ -30,11 +30,14 @@ async def init_db_pool():
     """Initialize the asyncpg connection pool. Call once at startup."""
     global _pool
     settings = get_settings()
+    # Strip sslmode from DSN — asyncpg uses the ssl= kwarg instead
+    dsn = settings.database_url.split("?")[0]
     _pool = await asyncpg.create_pool(
-        dsn=settings.database_url,
+        dsn=dsn,
         min_size=2,
         max_size=10,
         command_timeout=60,
+        ssl=False,
     )
     logger.info("db_pool_initialized")
 

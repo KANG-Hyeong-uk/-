@@ -30,8 +30,8 @@ reportlab>=4.1.0
 # Cron expression parsing (for scheduled scans)
 croniter>=2.0.0
 
-# MCP Server (Model Context Protocol)
-mcp>=1.0.0
+# MCP Server (Model Context Protocol) — FastMCP + Streamable HTTP transport
+mcp[cli]>=1.9.0
 
 # Semgrep SAST engine
 semgrep>=1.56.0

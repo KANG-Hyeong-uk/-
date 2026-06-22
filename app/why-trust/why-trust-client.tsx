@@ -97,7 +97,7 @@ const COMPARISON: CompRow[] = [
 ];
 
 const COST_ROWS = [
-  { name: "Trust Pro",      cost: "$9.9/mo",           note: "Unlimited scans + AI fix + Auto PR" },
+  { name: "Gwangju Security Pro",      cost: "$9.9/mo",           note: "Unlimited scans + AI fix + Auto PR" },
   { name: "Snyk Team",      cost: "$25+/dev/mo",       note: "Min 5 devs = $125/mo" },
   { name: "Checkmarx",      cost: "$59,000+/yr",       note: "Enterprise sales only" },
   { name: "Veracode",       cost: "$15,000+/yr",       note: "Per-app pricing" },
@@ -109,7 +109,7 @@ const DONT_NEED = [
   {
     icon: DollarSign,
     title: "Expensive enterprise contracts",
-    desc: "Checkmarx starts at $59K/yr. Veracode starts at $15K/yr. Trust Pro is $9.9/mo.",
+    desc: "Checkmarx starts at $59K/yr. Veracode starts at $15K/yr. Gwangju Security Pro is $9.9/mo.",
   },
   {
     icon: Cpu,
@@ -119,7 +119,7 @@ const DONT_NEED = [
   {
     icon: Crosshair,
     title: "Paid penetration testing",
-    desc: "A single pentest costs $5K~$30K. Trust runs automated checks on every deploy.",
+    desc: "A single pentest costs $5K~$30K. Gwangju Security runs automated checks on every deploy.",
   },
   {
     icon: Bug,
@@ -176,7 +176,7 @@ export default function WhyTrustClient() {
             className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors text-sm"
           >
             <ArrowLeft className="w-4 h-4" />
-            Trust
+            Gwangju Security
           </Link>
           <Link
             href="/pricing"
@@ -201,12 +201,12 @@ export default function WhyTrustClient() {
             For Vibe Coders Who Ship Fast
           </div>
           <h1 className="text-3xl md:text-5xl font-bold mb-4 text-balance">
-            Why <span className="text-neon-cyan neon-text">Trust</span>?
+            Why Gwangju Security <span className="text-neon-cyan neon-text">Gwangju Security</span>?
           </h1>
           <p className="text-muted-foreground text-lg leading-relaxed max-w-2xl mx-auto">
             You build with AI. You ship in days, not months.<br className="hidden md:block" />
             But one exposed API key or unpatched vulnerability can undo everything.<br className="hidden md:block" />
-            <span className="text-foreground font-medium">Trust is the last checkpoint before you go live.</span>
+            <span className="text-foreground font-medium">Gwangju Security is the last checkpoint before you go live.</span>
           </p>
         </motion.section>
 
@@ -268,7 +268,7 @@ export default function WhyTrustClient() {
           transition={{ duration: 0.5, ease: "easeOut" }}
         >
           <h2 className="text-xl font-semibold text-center mb-2">
-            Trust vs. The Alternatives
+            Gwangju Security vs. The Alternatives
           </h2>
           <p className="text-sm text-muted-foreground text-center mb-8">
             AI coding assistants help you write code &mdash; but they don&apos;t verify what ships.
@@ -284,7 +284,7 @@ export default function WhyTrustClient() {
                     </th>
                     <th className="px-3 py-3 text-neon-cyan font-semibold whitespace-nowrap">
                       <div className="flex items-center justify-center gap-1.5">
-                        <Shield className="w-3.5 h-3.5" /> Trust
+                        <Shield className="w-3.5 h-3.5" /> 광주 보안관
                       </div>
                     </th>
                     <th className="px-3 py-3 text-muted-foreground font-medium whitespace-nowrap">
@@ -423,7 +423,7 @@ export default function WhyTrustClient() {
             What You Don&apos;t Need Anymore
           </h2>
           <p className="text-sm text-muted-foreground text-center mb-8">
-            Trust replaces the overhead that slows indie devs down.
+            Gwangju Security replaces the overhead that slows indie devs down.
           </p>
 
           <motion.div
@@ -476,7 +476,7 @@ export default function WhyTrustClient() {
               Copilot generates code &mdash; <span className="text-neon-cyan">29.8% of which contains security weaknesses.</span><br />
               Vercel deploys your app &mdash; but doesn&apos;t scan it.<br /><br />
               <span className="text-foreground font-medium">
-                Trust scans your URL or GitHub repo, finds vulnerabilities with AI,
+                Gwangju Security scans your URL or GitHub repo, finds vulnerabilities with AI,
                 and creates a Fix PR &mdash; all in one click.
               </span>
             </p>
@@ -512,7 +512,7 @@ export default function WhyTrustClient() {
             Privacy
           </Link>
           <Link href="/" className="hover:text-foreground transition-colors">
-            Trust Security
+            Gwangju Security
           </Link>
         </div>
       </footer>

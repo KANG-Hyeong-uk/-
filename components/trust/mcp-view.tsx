@@ -69,7 +69,7 @@ const mcpConfigs = {
     name: "GitHub Action",
     icon: GitBranch,
     path: ".github/workflows/trust-scan.yml",
-    config: `name: Trust Security Scan
+    config: `name: Gwangju Security Scan
 
 on:
   deployment_status:
@@ -83,7 +83,7 @@ jobs:
   security-scan:
     runs-on: ubuntu-latest
     steps:
-      - name: Trust Security Scan
+      - name: Gwangju Security Scan
         uses: trust-security/scan-action@v1
         with:
           url: \${{ github.event.inputs.url || env.DEPLOY_URL }}
@@ -229,7 +229,7 @@ export function MCPView({ onNavigate }: MCPViewProps) {
         </div>
         <div className="flex items-center gap-3">
           <Shield className="w-6 h-6 text-neon-cyan" />
-          <span className="font-semibold text-foreground">Trust MCP Server</span>
+          <span className="font-semibold text-foreground">Gwangju Security MCP Server</span>
           <span className="px-2 py-1 text-xs rounded-full bg-neon-cyan/10 text-neon-cyan border border-neon-cyan/30 font-mono">
             v2.1
           </span>
@@ -257,7 +257,7 @@ export function MCPView({ onNavigate }: MCPViewProps) {
               <Bot className="w-8 h-8 text-neon-cyan" />
             </motion.div>
             <h1 className="text-3xl font-bold text-foreground mb-3">
-              Trust MCP Server
+              Gwangju Security MCP Server
             </h1>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               Security scanning for AI-native development. Scan websites, GitHub repos, and code snippets directly from Claude Desktop, Claude Code, Cursor, or any MCP-compatible tool.
@@ -350,7 +350,7 @@ export function MCPView({ onNavigate }: MCPViewProps) {
                       in your repository&apos;s environment variables (Settings &gt; Secrets and variables &gt; Actions)
                     </li>
                     <li>
-                      The scan runs automatically on deployments, or manually via <span className="text-foreground">Actions &gt; Trust Security Scan &gt; Run workflow</span>
+                      The scan runs automatically on deployments, or manually via <span className="text-foreground">Actions &gt; Gwangju Security Scan &gt; Run workflow</span>
                     </li>
                   </ol>
                   <p className="text-xs text-muted-foreground/70">
@@ -418,7 +418,7 @@ export function MCPView({ onNavigate }: MCPViewProps) {
                   &quot;Scan https://my-app.com for security vulnerabilities&quot;
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  Trust sends 5,000+ real HTTP requests to detect live vulnerabilities (SQLi, XSS, misconfigurations). Returns a score, grade, and AI-analyzed fix suggestions.
+                  Gwangju Security sends 5,000+ real HTTP requests to detect live vulnerabilities (SQLi, XSS, misconfigurations). Returns a score, grade, and AI-analyzed fix suggestions.
                 </p>
               </div>
 

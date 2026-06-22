@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
-export const alt = "Trust Security Report";
+export const alt = "Gwangju Security Report";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -98,7 +98,7 @@ export default async function OGImage({
             T
           </div>
           <span style={{ fontSize: "24px", color: "#e0e0e0", fontWeight: 600 }}>
-            Trust Security
+            Gwangju Security
           </span>
           <span
             style={{

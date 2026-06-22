@@ -16,8 +16,6 @@ import {
   Mail,
   Bell,
 } from "lucide-react";
-import { createClient } from "@/lib/supabase";
-import { ProviderPicker } from "@/components/trust/ProviderPicker";
 import { PaddleLoader } from "@/components/trust/PaddleLoader";
 
 const fadeUp = {
@@ -81,21 +79,10 @@ export default function PricingClient() {
   const [plan, setPlan] = useState<"monthly" | "yearly">("monthly");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [loginPickerOpen, setLoginPickerOpen] = useState(false);
-
   const handleUpgrade = async () => {
     setLoading(true);
     setError(null);
     try {
-      const supabase = createClient();
-      const { data: { user } } = await supabase.auth.getUser();
-
-      if (!user) {
-        setLoading(false);
-        setLoginPickerOpen(true);
-        return;
-      }
-
       const priceId = plan === "monthly"
         ? process.env.NEXT_PUBLIC_PADDLE_PRICE_MONTHLY
         : process.env.NEXT_PUBLIC_PADDLE_PRICE_YEARLY;
@@ -108,8 +95,6 @@ export default function PricingClient() {
 
       window.Paddle.Checkout.open({
         items: [{ priceId, quantity: 1 }],
-        customer: { email: user.email || "" },
-        customData: { user_id: user.id },
       });
     } catch (err) {
       setError(
@@ -147,7 +132,7 @@ export default function PricingClient() {
             className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors text-sm"
           >
             <ArrowLeft className="w-4 h-4" />
-            Trust
+            Gwangju Security
           </Link>
         </div>
       </nav>
@@ -369,11 +354,10 @@ export default function PricingClient() {
             Privacy Policy
           </Link>
           <Link href="/" className="hover:text-foreground transition-colors">
-            Trust Security
+            Gwangju Security
           </Link>
         </div>
       </footer>
-      <ProviderPicker open={loginPickerOpen} onClose={() => setLoginPickerOpen(false)} />
     </div>
   );
 }

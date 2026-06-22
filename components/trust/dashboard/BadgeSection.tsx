@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { motion } from "framer-motion";
@@ -34,8 +34,8 @@ export function BadgeSection({
 
     const text =
       type === "md"
-        ? `[![Trust Security](${badge.badge_url})](${reportUrl})`
-        : `<a href="${reportUrl}"><img src="${badge.badge_url}" alt="Trust Security Badge" height="32" /></a>`;
+        ? `[![Gwangju Security](${badge.badge_url})](${reportUrl})`
+        : `<a href="${reportUrl}"><img src="${badge.badge_url}" alt="Gwangju Security Badge" height="32" /></a>`;
 
     try {
       await navigator.clipboard.writeText(text);
@@ -58,7 +58,7 @@ export function BadgeSection({
           <div className="flex items-center gap-3 mb-6">
             <Award className="w-6 h-6 text-neon-cyan" />
             <h2 className="text-xl font-semibold text-foreground">
-              Your Trust Badge
+              Your Gwangju Security Badge
             </h2>
           </div>
 
@@ -66,7 +66,7 @@ export function BadgeSection({
             <p className="text-sm text-muted-foreground mb-4">Preview</p>
             <img
               src={badge.badge_url}
-              alt={`Trust Score: ${grade}`}
+              alt={`Gwangju Security Score: ${grade}`}
               className="h-8"
             />
             <a
@@ -136,7 +136,7 @@ export function BadgeSection({
             <Award className="w-5 h-5 text-neon-cyan" />
           </div>
           <div>
-            <p className="text-sm font-semibold text-foreground">Trust Badge</p>
+            <p className="text-sm font-semibold text-foreground">Gwangju Security Badge</p>
             <p className="text-xs text-muted-foreground">Show off your {grade} grade on your README</p>
           </div>
         </div>
@@ -145,7 +145,7 @@ export function BadgeSection({
           disabled={isGeneratingBadge}
           variant="outline"
           size="sm"
-          aria-label={isGeneratingBadge ? "Generating trust badge" : "Generate trust badge for your README"}
+          aria-label={isGeneratingBadge ? "Generating Gwangju Security Badge" : "Generate Gwangju Security Badge for your README"}
           className="border-neon-cyan/30 text-neon-cyan hover:bg-neon-cyan/10 shrink-0"
         >
           {isGeneratingBadge ? (
@@ -161,3 +161,4 @@ export function BadgeSection({
 
   return null;
 }
+

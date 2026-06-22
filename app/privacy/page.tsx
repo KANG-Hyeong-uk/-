@@ -1,11 +1,11 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { FadeIn } from "@/components/ui/fade-in";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy | Trust Security",
-  description: "Trust Security Privacy Policy",
+  title: "Privacy Policy | Gwangju Security",
+  description: "Gwangju Security Privacy Policy",
 };
 
 const LAST_UPDATED = "February 19, 2026";
@@ -21,7 +21,7 @@ export default function PrivacyPage() {
             className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors text-sm"
           >
             <ArrowLeft className="w-4 h-4" />
-            Trust
+            Gwangju Security
           </Link>
         </div>
       </nav>
@@ -38,7 +38,7 @@ export default function PrivacyPage() {
 
         <FadeIn delay={0.15} className="space-y-6 text-sm text-muted-foreground leading-relaxed">
           <p className="text-foreground">
-            Trust Security (&quot;Trust&quot;, &quot;we&quot;, &quot;our&quot;) is committed to protecting
+            Gwangju Security (&quot;Gwangju Security&quot;, &quot;we&quot;, &quot;our&quot;) is committed to protecting
             your personal information. This Privacy Policy explains what data we
             collect, how we use it, and your rights regarding that data.
           </p>
@@ -63,7 +63,7 @@ export default function PrivacyPage() {
               />
               <Row
                 label="Payment information"
-                value="Handled directly by Paddle. Trust never stores card numbers or billing details."
+                value="Handled directly by Paddle. Gwangju Security never stores card numbers or billing details."
               />
               <Row
                 label="Service logs"
@@ -236,7 +236,7 @@ export default function PrivacyPage() {
           <Section title="11. Contact">
             <p>Questions or requests regarding this policy:</p>
             <div className="mt-3 glass rounded-xl p-4 border border-white/8">
-              <p className="text-foreground font-medium">Trust Security</p>
+              <p className="text-foreground font-medium">Gwangju Security</p>
               <p className="mt-1">
                 Email:{" "}
                 <a
@@ -267,7 +267,7 @@ export default function PrivacyPage() {
             Pricing
           </Link>
           <Link href="/" className="hover:text-foreground transition-colors">
-            Trust Security
+            Gwangju Security
           </Link>
         </div>
       </footer>
@@ -298,3 +298,4 @@ function Row({ label, value }: { label: string; value: string }) {
     </div>
   );
 }
+

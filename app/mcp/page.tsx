@@ -2,11 +2,11 @@ import type { Metadata } from "next";
 import { MCPView } from "@/components/trust/mcp-view";
 
 export const metadata: Metadata = {
-  title: "MCP Server — Trust Security Scanner",
+  title: "MCP Server — Gwangju Security Scanner",
   description:
-    "Connect Trust Security Scanner to Claude Desktop, Claude Code, Cursor, or any MCP-compatible AI tool. Scan websites and GitHub repos for vulnerabilities directly from your IDE.",
+    "Connect Gwangju Security Scanner to Claude Desktop, Claude Code, Cursor, or any MCP-compatible AI tool. Scan websites and GitHub repos for vulnerabilities directly from your IDE.",
   openGraph: {
-    title: "Trust MCP Server — Security Scanning for AI IDEs",
+    title: "Gwangju Security MCP Server — Security Scanning for AI IDEs",
     description:
       "9 security tools + 3 context resources for Claude, Cursor, and MCP-compatible AI agents. URL scanning, repo scanning, code analysis, and security posture — no installation required.",
     url: "https://trust-scan.me/mcp",

@@ -63,6 +63,9 @@ async def analyze_vulnerabilities(request: AnalyzeRequest):
             ]
         )
 
+    # Cap at 5 to limit token usage
+    vulnerabilities = vulnerabilities[:5]
+
     # Analyze with Claude
     try:
         analyses = await analyzer.analyze_batch(vulnerabilities)

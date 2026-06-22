@@ -16,6 +16,7 @@ interface ScanningViewProps {
   onError: (error: string) => void;
   initialError?: string | null;
   onGoHome?: () => void;
+  demoResult?: ScanResult | RepoScanResult | null;
 }
 
 // Category to template/tag mapping for vulnerability classification
@@ -105,49 +106,49 @@ function getCategoryColorClass(
 // Simulated log messages that match the scan stages
 const scanStageMessages: Record<string, { prefix: string; message: string }[]> = {
   initializing: [
-    { prefix: "[Trust]", message: "Initializing security scanner..." },
+    { prefix: "[Gwangju Security]", message: "Initializing security scanner..." },
     { prefix: "[Nuclei]", message: "Loading vulnerability templates..." },
   ],
   parsing: [
-    { prefix: "[Trust]", message: "Parsing scan results..." },
+    { prefix: "[Gwangju Security]", message: "Parsing scan results..." },
   ],
   complete: [
-    { prefix: "[Trust]", message: "Scan complete. Generating dashboard..." },
+    { prefix: "[Gwangju Security]", message: "Scan complete. Generating dashboard..." },
   ],
 };
 
 // Continuous scanning log messages for active scanning effect
 const continuousScanMessages: { prefix: string; message: string }[] = [
   { prefix: "[Nuclei]", message: "Scanning for API Key leaks..." },
-  { prefix: "[Trust AI]", message: "Analyzing OAuth flow patterns..." },
+  { prefix: "[Gwangju AI]", message: "Analyzing OAuth flow patterns..." },
   { prefix: "[Security]", message: "Checking CSRF & CORS configurations..." },
   { prefix: "[Nuclei]", message: "Detecting exposed environment variables..." },
-  { prefix: "[Trust AI]", message: "Analyzing authentication endpoints..." },
+  { prefix: "[Gwangju AI]", message: "Analyzing authentication endpoints..." },
   { prefix: "[Security]", message: "Scanning for SQL injection vectors..." },
-  { prefix: "[Trust AI]", message: "Evaluating input sanitization..." },
+  { prefix: "[Gwangju AI]", message: "Evaluating input sanitization..." },
   { prefix: "[Nuclei]", message: "Checking for XSS vulnerabilities..." },
-  { prefix: "[Trust AI]", message: "Analyzing session management..." },
+  { prefix: "[Gwangju AI]", message: "Analyzing session management..." },
   { prefix: "[Security]", message: "Scanning dependency vulnerabilities..." },
   { prefix: "[Nuclei]", message: "Testing for open redirects..." },
-  { prefix: "[Trust AI]", message: "Checking JWT token validation..." },
+  { prefix: "[Gwangju AI]", message: "Checking JWT token validation..." },
   { prefix: "[Security]", message: "Scanning for SSRF vulnerabilities..." },
   { prefix: "[Nuclei]", message: "Detecting misconfigured headers..." },
-  { prefix: "[Trust AI]", message: "Analyzing rate limiting policies..." },
+  { prefix: "[Gwangju AI]", message: "Analyzing rate limiting policies..." },
   { prefix: "[Security]", message: "Checking for directory traversal..." },
   { prefix: "[Nuclei]", message: "Scanning for information disclosure..." },
-  { prefix: "[Trust AI]", message: "Evaluating error handling patterns..." },
+  { prefix: "[Gwangju AI]", message: "Evaluating error handling patterns..." },
   { prefix: "[Security]", message: "Testing for IDOR vulnerabilities..." },
   { prefix: "[Nuclei]", message: "Checking SSL/TLS configurations..." },
-  { prefix: "[Trust AI]", message: "Analyzing cookie security flags..." },
+  { prefix: "[Gwangju AI]", message: "Analyzing cookie security flags..." },
   { prefix: "[Security]", message: "Scanning for XXE injection..." },
   { prefix: "[Nuclei]", message: "Detecting exposed admin panels..." },
-  { prefix: "[Trust AI]", message: "Checking Content-Security-Policy..." },
+  { prefix: "[Gwangju AI]", message: "Checking Content-Security-Policy..." },
   { prefix: "[Security]", message: "Testing for command injection..." },
   { prefix: "[Nuclei]", message: "Scanning for prototype pollution..." },
-  { prefix: "[Trust AI]", message: "Analyzing CORS misconfiguration..." },
+  { prefix: "[Gwangju AI]", message: "Analyzing CORS misconfiguration..." },
   { prefix: "[Security]", message: "Checking for clickjacking vectors..." },
   { prefix: "[Nuclei]", message: "Detecting exposed .git directories..." },
-  { prefix: "[Trust AI]", message: "Evaluating authentication bypass..." },
+  { prefix: "[Gwangju AI]", message: "Evaluating authentication bypass..." },
 ];
 
 // Repo scan specific log messages
@@ -173,7 +174,7 @@ const repoScanMessages: { prefix: string; message: string }[] = [
   { prefix: "[Secret]", message: "Scanning for JWT secrets..." },
   { prefix: "[SCA]", message: "Checking for outdated packages..." },
   { prefix: "[SAST]", message: "Analyzing cryptographic weaknesses..." },
-  { prefix: "[Trust AI]", message: "Calculating security score..." },
+  { prefix: "[Gwangju AI]", message: "Calculating security score..." },
 ];
 
 export function ScanningView({
@@ -184,6 +185,7 @@ export function ScanningView({
   onError,
   initialError,
   onGoHome,
+  demoResult,
 }: ScanningViewProps) {
   const [progress, setProgress] = useState(0);
   const [currentStage, setCurrentStage] = useState("initializing");
@@ -225,9 +227,66 @@ export function ScanningView({
     return () => clearInterval(interval);
   }, [error, currentStage, addLog, isRepoScan]);
 
+  // Demo mode: 30-second simulated scan for the lingscars URL
+  useEffect(() => {
+    if (scanId !== "__demo__" || error) return;
+
+    let isMounted = true;
+    const DEMO_DURATION_MS = 30000;
+    const startTime = Date.now();
+
+    // Add initial logs
+    scanStageMessages.initializing.forEach((log, i) => {
+      setTimeout(() => {
+        if (isMounted) addLog(log);
+      }, i * 300);
+    });
+
+    // Tick progress every 300 ms
+    const tick = setInterval(() => {
+      if (!isMounted) return;
+      const elapsed = Date.now() - startTime;
+      const raw = elapsed / DEMO_DURATION_MS;
+      const pct = Math.min(Math.round(raw * 99), 99); // hold at 99% until we finish
+      setProgress(pct);
+    }, 300);
+
+    // After 30 s, finish
+    const finishTimer = setTimeout(() => {
+      if (!isMounted) return;
+      clearInterval(tick);
+      setCurrentStage("complete");
+      scanStageMessages.complete.forEach((log) => addLog(log));
+
+      // Animate last 1% → 100%
+      const startProgress = 99;
+      const duration = 800;
+      const animStart = Date.now();
+      const animateProgress = () => {
+        const t = Math.min((Date.now() - animStart) / duration, 1);
+        const eased = 1 - Math.pow(1 - t, 3);
+        setProgress(Math.round(startProgress + (100 - startProgress) * eased));
+        if (t < 1) {
+          requestAnimationFrame(animateProgress);
+        } else {
+          setTimeout(() => {
+            if (isMounted && demoResult) onComplete(demoResult);
+          }, 700);
+        }
+      };
+      requestAnimationFrame(animateProgress);
+    }, DEMO_DURATION_MS);
+
+    return () => {
+      isMounted = false;
+      clearInterval(tick);
+      clearTimeout(finishTimer);
+    };
+  }, [scanId, error, onComplete, addLog, demoResult]);
+
   // Poll scan status
   useEffect(() => {
-    if (!scanId || error) return;
+    if (!scanId || scanId === "__demo__" || error) return;
 
     let isMounted = true;
     let pollTimeout: NodeJS.Timeout;
@@ -384,7 +443,7 @@ export function ScanningView({
             className="flex items-center justify-center gap-3 mb-4 hover:opacity-80 transition-opacity cursor-pointer mx-auto"
           >
             <Shield className="w-8 h-8 text-neon-cyan" />
-            <span className="text-xl font-semibold text-foreground">Trust</span>
+            <span className="text-xl font-semibold text-foreground">광주 보안관</span>
           </button>
           <p className="text-muted-foreground">
             Scanning:{" "}
@@ -515,7 +574,7 @@ export function ScanningView({
                   >
                     <span
                       className={`shrink-0 ${
-                        log.prefix === "[Trust AI]"
+                        log.prefix === "[Gwangju AI]"
                           ? "text-neon-cyan"
                           : log.prefix === "[Nuclei]"
                             ? "text-green-400"

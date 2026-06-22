@@ -69,8 +69,6 @@ import { DigestSection } from "@/components/trust/dashboard/DigestSection";
 import { UpgradeModal } from "@/components/trust/UpgradeModal";
 import { NoiseBackground } from "@/components/ui/noise-background";
 import type { SubscriptionState } from "@/lib/subscription";
-import { createClient } from "@/lib/supabase";
-
 // BenchmarkChart removed — percentile is shown inline in ScoreCard
 import type { UIVulnerability, UIRepoVulnerability } from "@/components/trust/dashboard";
 
@@ -335,7 +333,7 @@ export function DashboardView({ scanResult, isRepoScan, repoScanResult, onNaviga
     trackReportShared("twitter");
     const currentScore = isRepoScan ? repoScanResult?.score : scanResult?.score;
     const currentGrade = isRepoScan ? repoScanResult?.grade : scanResult?.grade;
-    const text = `My website security score is ${currentScore ?? "?"}/100 (Grade ${currentGrade ?? "?"})! Scan your site for free with Trust Security`;
+    const text = `My website security score is ${currentScore ?? "?"}/100 (Grade ${currentGrade ?? "?"})! Scan your site for free with Gwangju Security`;
     window.open(
       `https://x.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`,
       "_blank",
@@ -616,7 +614,7 @@ export function DashboardView({ scanResult, isRepoScan, repoScanResult, onNaviga
           className="flex items-center gap-3 hover:opacity-80 transition-opacity cursor-pointer"
         >
           <Shield className="w-7 h-7 text-neon-cyan" aria-hidden="true" />
-          <span className="text-lg font-semibold text-foreground">Trust</span>
+          <span className="text-lg font-semibold text-foreground">광주 보안관</span>
         </button>
         <div className="flex items-center gap-2 flex-wrap justify-end">
           {(vulns.length > 0 || repoVulns.length > 0) && (

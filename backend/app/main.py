@@ -11,7 +11,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.config import get_settings
 from app.logging_config import setup_logging, get_logger
 from app.limiter import RateLimitMiddleware
-from app.api.routes import scan, analyze, badge, repo_scan, billing, billing_webhook, github, github_webhook, notifications, push, mcp_tracking, account, vercel
+from app.api.routes import scan, analyze, badge, repo_scan, billing, billing_webhook, github, github_webhook, notifications, push, mcp_tracking, account, vercel, api_keys
 from app.api.error_handlers import register_error_handlers
 
 logger = get_logger(__name__)
@@ -179,6 +179,7 @@ _legacy_router.include_router(push.router)
 _legacy_router.include_router(mcp_tracking.router)
 _legacy_router.include_router(account.router)
 _legacy_router.include_router(vercel.router)
+_legacy_router.include_router(api_keys.router)
 app.include_router(_legacy_router)
 
 # Canonical /api/v1/* routes
@@ -194,6 +195,7 @@ _v1_router.include_router(push.router)
 _v1_router.include_router(mcp_tracking.router)
 _v1_router.include_router(account.router)
 _v1_router.include_router(vercel.router)
+_v1_router.include_router(api_keys.router)
 app.include_router(_v1_router)
 
 # Webhook routes (no /api prefix — Stripe sends to /webhooks/stripe)
@@ -367,6 +369,15 @@ async def cron_send_weekly_reports(request: Request):
 
     logger.info("weekly_report_cron_completed", emails_sent=emails_sent, errors=errors)
     return {"status": "ok", "emails_sent": emails_sent, "errors": errors}
+
+
+# ── Mount MCP server at /mcp (Streamable HTTP transport) ──────────────────
+try:
+    from app.services.mcp_server import mcp as _mcp_server
+    app.mount("/mcp", _mcp_server.streamable_http_app())
+    logger.info("mcp_server_mounted", path="/mcp")
+except Exception as _mcp_err:
+    logger.warning("mcp_server_mount_failed", error=str(_mcp_err))
 
 
 if __name__ == "__main__":

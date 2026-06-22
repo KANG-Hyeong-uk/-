@@ -1,15 +1,15 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { FadeIn } from "@/components/ui/fade-in";
 
 export const metadata: Metadata = {
-  title: "Terms of Service | Trust Security",
-  description: "Trust Security Terms of Service",
+  title: "Terms of Service | Gwangju Security",
+  description: "Gwangju Security Terms of Service",
 };
 
 const LAST_UPDATED = "March 5, 2026";
-const CONTACT_EMAIL = "contact@trust-scan.me";
+const CONTACT_EMAIL = "contact@Gwangju Security-scan.me";
 
 export default function TermsPage() {
   return (
@@ -21,7 +21,7 @@ export default function TermsPage() {
             className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors text-sm"
           >
             <ArrowLeft className="w-4 h-4" />
-            Trust
+            Gwangju Security
           </Link>
         </div>
       </nav>
@@ -39,14 +39,14 @@ export default function TermsPage() {
         <FadeIn delay={0.15} className="space-y-6 text-sm text-muted-foreground leading-relaxed">
           <p className="text-foreground">
             Please read these Terms of Service (&quot;Terms&quot;) carefully before
-            using Trust Security (&quot;Trust&quot;, &quot;we&quot;, &quot;our&quot;, &quot;the Service&quot;) at{" "}
-            <span className="text-neon-cyan">trust-scan.me</span>. By accessing
+            using Gwangju Security (&quot;Gwangju Security&quot;, &quot;we&quot;, &quot;our&quot;, &quot;the Service&quot;) at{" "}
+            <span className="text-neon-cyan">Gwangju Security-scan.me</span>. By accessing
             or using the Service, you agree to be bound by these Terms.
           </p>
 
           <Section title="1. Service Description">
             <p>
-              Trust provides automated security scanning for websites and GitHub
+              Gwangju Security provides automated security scanning for websites and GitHub
               repositories, together with AI-powered vulnerability analysis. The
               Service is designed to help developers identify and remediate
               security issues in software they own or are authorized to test.
@@ -96,7 +96,7 @@ export default function TermsPage() {
             </ul>
             <p className="mt-3">
               You are solely responsible for ensuring you have proper
-              authorization before initiating any scan. Trust acts only as a
+              authorization before initiating any scan. Gwangju Security acts only as a
               tool at your direction and assumes no liability for unauthorized
               scans you initiate. Violation of these rules may result in
               immediate account termination and, where applicable, referral to
@@ -121,7 +121,7 @@ export default function TermsPage() {
 
           <Section title="5. Paid Plans and Billing">
             <p>
-              Trust Pro is available on a monthly ($9.9/month during the launch
+              Gwangju Security Pro is available on a monthly ($9.9/month during the launch
               offer) or annual ($99/year) subscription basis. All payments are
               processed by{" "}
               <span className="text-foreground">Paddle</span>, our Merchant of
@@ -145,7 +145,7 @@ export default function TermsPage() {
               >
                 {CONTACT_EMAIL}
               </a>
-              . Refunds are processed within 3–5 business days.
+              . Refunds are processed within 3?? business days.
             </p>
           </Section>
 
@@ -159,14 +159,14 @@ export default function TermsPage() {
               all vulnerabilities or that results will be accurate or complete.
               The Service is provided &quot;as is&quot; without warranty of any kind,
               express or implied, to the fullest extent permitted by applicable
-              law. You should not rely solely on Trust as your only security
+              law. You should not rely solely on Gwangju Security as your only security
               measure.
             </p>
           </Section>
 
           <Section title="8. Limitation of Liability">
             <p>
-              To the maximum extent permitted by law, Trust and its team shall
+              To the maximum extent permitted by law, Gwangju Security and its team shall
               not be liable for any indirect, incidental, special, consequential,
               or punitive damages, including loss of profits or data, arising
               from your use of the Service. Our total liability for any claim
@@ -177,8 +177,8 @@ export default function TermsPage() {
 
           <Section title="9. Intellectual Property">
             <p>
-              The Trust platform, logo, and all associated brand assets are the
-              intellectual property of the Trust team. Your scan data and reports
+              The Gwangju Security platform, logo, and all associated brand assets are the
+              intellectual property of the Gwangju Security team. Your scan data and reports
               remain yours. You grant us a limited, royalty-free license to
               process your data solely to provide the Service. We may use
               aggregated, anonymized statistics for service improvement.
@@ -243,7 +243,7 @@ export default function TermsPage() {
             Pricing
           </Link>
           <Link href="/" className="hover:text-foreground transition-colors">
-            Trust Security
+            Gwangju Security
           </Link>
         </div>
       </footer>
@@ -265,3 +265,5 @@ function Section({
     </div>
   );
 }
+
+

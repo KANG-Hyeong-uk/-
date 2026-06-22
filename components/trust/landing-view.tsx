@@ -321,9 +321,10 @@ export function LandingView({ onStartScan, onStartRepoScan, subscription, notifi
             <Shield className="w-8 h-8 text-neon-cyan" />
             <div className="absolute inset-0 w-8 h-8 bg-neon-cyan/30 blur-lg" />
           </div>
-          <span className="text-xl font-semibold tracking-tight text-foreground">
-            Trust
-          </span>
+          <div className="flex flex-col leading-tight">
+            <span className="text-xl font-semibold tracking-tight text-foreground">광주 보안관</span>
+            <span className="text-xs text-muted-foreground tracking-wide">Gwangju Security</span>
+          </div>
         </motion.div>
 
         <motion.nav
@@ -332,6 +333,18 @@ export function LandingView({ onStartScan, onStartRepoScan, subscription, notifi
           transition={{ duration: 0.3, delay: 0.05 }}
           className="flex items-center gap-2"
         >
+          <Link
+            href="/developers"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-muted-foreground text-sm font-medium hover:text-foreground transition-colors"
+          >
+            API
+          </Link>
+          <Link
+            href="/pricing"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-neon-cyan/30 text-neon-cyan text-sm font-medium hover:bg-neon-cyan/10 hover:border-neon-cyan/50 transition-colors"
+          >
+            요금제
+          </Link>
           {notificationProps && (
             <NotificationToggle
               permission={notificationProps.permission}
@@ -963,7 +976,7 @@ export function LandingView({ onStartScan, onStartRepoScan, subscription, notifi
               <thead>
                 <tr className="border-b border-white/10">
                   <th className="text-left p-4 text-muted-foreground font-medium">{t.comparison.featureCol}</th>
-                  <th className="p-4 text-neon-cyan font-semibold">Trust</th>
+                  <th className="p-4 text-neon-cyan font-semibold">광주 보안관</th>
                   <th className="p-4 text-muted-foreground font-medium">GitHub Copilot</th>
                   <th className="p-4 text-muted-foreground font-medium">Cursor</th>
                   <th className="p-4 text-muted-foreground font-medium">Mobb</th>

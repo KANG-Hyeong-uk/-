@@ -22,7 +22,7 @@ export async function generateMetadata({ params, searchParams }: ReportPageProps
 
     if (!res.ok) {
       return {
-        title: "Trust Security Report",
+        title: "Gwangju Security Report",
         description: "AI-powered security scan report",
       };
     }
@@ -35,17 +35,17 @@ export async function generateMetadata({ params, searchParams }: ReportPageProps
     const prefix = isRepo ? "Repo Scan" : "Security Scan";
 
     return {
-      title: `Trust ${prefix} Report - Grade ${grade} (${score}/100)`,
+      title: `Gwangju Security ${prefix} Report - Grade ${grade} (${score}/100)`,
       description: `${prefix} for ${target}: Grade ${grade}, Score ${score}/100, ${totalVulns} findings detected.`,
       openGraph: {
-        title: `Trust ${prefix} Report - Grade ${grade} (${score}/100)`,
+        title: `Gwangju Security ${prefix} Report - Grade ${grade} (${score}/100)`,
         description: `${prefix} for ${target}: Grade ${grade}, Score ${score}/100, ${totalVulns} findings detected.`,
         type: "website",
       },
     };
   } catch {
     return {
-      title: "Trust Security Report",
+      title: "Gwangju Security Report",
       description: "AI-powered security scan report",
     };
   }

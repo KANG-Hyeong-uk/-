@@ -142,7 +142,7 @@ export const dict: Record<Lang, Dict> = {
       },
       mcp: {
         title: "MCP Agent",
-        description: "Integrate Trust into Claude Code or Cursor. Run scans without leaving your IDE.",
+        description: "Integrate Gwangju Security into Claude Code or Cursor. Run scans without leaving your IDE.",
         cta: "Set Up →",
       },
     },
@@ -163,7 +163,7 @@ export const dict: Record<Lang, Dict> = {
       },
     },
     comparison: {
-      heading: "Trust vs. Alternatives",
+      heading: "Gwangju Security vs. Alternatives",
       featureCol: "Feature",
       learnMore: "Learn more about our security approach",
       rows: {
@@ -190,9 +190,9 @@ export const dict: Record<Lang, Dict> = {
       viewPricing: "View Pricing →",
     },
     footer: {
-      copyright: "© 2026 Trust Security",
+      copyright: "© 2026 Gwangju Security",
       pricing: "Pricing",
-      whyTrust: "Why Trust",
+      whyTrust: "Why Gwangju Security",
       terms: "Terms",
       privacy: "Privacy",
     },
@@ -251,7 +251,7 @@ export const dict: Record<Lang, Dict> = {
       },
       mcp: {
         title: "MCP 에이전트",
-        description: "Claude Code나 Cursor에 Trust를 연결하세요. IDE에서 바로 스캔 실행.",
+        description: "Claude Code나 Cursor에 광주 보안관을 연결하세요. IDE에서 바로 스캔 실행.",
         cta: "설치하기 →",
       },
     },
@@ -272,9 +272,9 @@ export const dict: Record<Lang, Dict> = {
       },
     },
     comparison: {
-      heading: "Trust vs. 다른 도구들",
+      heading: "광주 보안관 vs. 다른 도구들",
       featureCol: "기능",
-      learnMore: "Trust의 보안 접근법 자세히 보기",
+      learnMore: "광주 보안관의 보안 접근법 자세히 보기",
       rows: {
         urlDast: "URL 스캔 (DAST)",
         vulnScan: "취약점 스캔",
@@ -299,9 +299,9 @@ export const dict: Record<Lang, Dict> = {
       viewPricing: "요금제 보기 →",
     },
     footer: {
-      copyright: "© 2026 Trust Security",
+      copyright: "© 2026 광주 보안관",
       pricing: "요금제",
-      whyTrust: "Trust 소개",
+      whyTrust: "광주 보안관 소개",
       terms: "이용약관",
       privacy: "개인정보",
     },

@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Trust Strategy",
-  description: "Trust Security Scanner의 전략 문서 모음 — 린 캔버스, 포지셔닝, 프라이싱 외.",
+  title: "Gwangju Security Strategy",
+  description: "Gwangju Security Scanner의 전략 문서 모음 — 린 캔버스, 포지셔닝, 프라이싱 외.",
 };
 
 type Tab = {
@@ -153,9 +153,9 @@ export default function StrategyHub() {
       `}</style>
       <main className="strat-hub">
         <div className="strat-hub-inner">
-          <div className="strat-hub-eyebrow">Trust Security · Strategy Hub</div>
+          <div className="strat-hub-eyebrow">Gwangju Security · Strategy Hub</div>
           <h1 className="strat-hub-title">
-            <span className="ac">Trust</span> 전략 문서
+            <span className="ac">광주 보안관</span> 전략 문서
           </h1>
           <p className="strat-hub-sub">
             바이브코더를 위한 보안 스캐너 — 비즈니스 모델, 경쟁 포지셔닝, 시장 분석을 한 자리에서.

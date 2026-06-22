@@ -2,8 +2,6 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { Bell, BellRing, BellOff, CheckCircle, ExternalLink } from "lucide-react";
-import { createClient } from "@/lib/supabase";
-
 type PermissionState = "default" | "granted" | "denied";
 
 const STORAGE_KEY = "trust-notifications-enabled";
@@ -12,7 +10,6 @@ const VAPID_PUBLIC_KEY =
   process.env.NEXT_PUBLIC_VAPID_KEY ||
   "BK7MUPZL_rNyhIzhuFRh4oox7zEKJqSqvEwV7kFMhyx_Jry6wK-UoRzKuPpMd4Cy3q3LLuvdwhYk92FGOzemQpg";
 
-/** Convert a URL-safe base64 VAPID key to a Uint8Array for pushManager.subscribe */
 function urlBase64ToUint8Array(base64String: string): Uint8Array<ArrayBuffer> {
   const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
   const base64 = (base64String + padding).replace(/-/g, "+").replace(/_/g, "/");
@@ -25,15 +22,8 @@ function urlBase64ToUint8Array(base64String: string): Uint8Array<ArrayBuffer> {
   return outputArray;
 }
 
-/** Get Supabase access token if user is logged in */
 async function getAuthToken(): Promise<string | null> {
-  try {
-    const supabase = createClient();
-    const { data: { session } } = await supabase.auth.getSession();
-    return session?.access_token ?? null;
-  } catch {
-    return null;
-  }
+  return null;
 }
 
 /** Send push subscription to backend (with auth if available) */
@@ -214,7 +204,7 @@ export function useNotifications() {
     if (!registration || Notification.permission !== "granted") return;
 
     try {
-      await registration.showNotification("Trust Security — Test", {
+      await registration.showNotification("Gwangju Security — Test", {
         body: "Notifications are working! You'll see alerts when scans complete.",
         icon: "/icon.svg",
         badge: "/icon.svg",
