@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>Trust Security — Positioning Matrix</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #0a0a0a;
+    color: #e5e5e5;
+    font-family: -apple-system, "SF Pro Display", "Pretendard", "Inter", system-ui, sans-serif;
+    padding: 40px 32px;
+    min-height: 100vh;
+  }
+  .wrap {
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+  h1 {
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 8px;
+  }
+  h1 .accent { color: #00f3ff; }
+  .subtitle {
+    color: #c5c5c5;
+    font-size: 15px;
+    margin-bottom: 48px;
+  }
+  .matrix-block {
+    margin-bottom: 72px;
+  }
+  h2 {
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .matrix-sub {
+    color: #c5c5c5;
+    font-size: 14px;
+    margin-bottom: 20px;
+  }
+  .matrix-svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    background: #101010;
+    border: 1px solid #1f1f1f;
+    border-radius: 12px;
+  }
+  .legend {
+    display: flex;
+    gap: 24px;
+    margin-top: 16px;
+    font-size: 13px;
+    flex-wrap: wrap;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .legend-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+  }
+  .legend-trust { background: #00f3ff; box-shadow: 0 0 12px rgba(0,243,255,0.8); }
+  .legend-threat { background: #0a0a0a; border: 2px solid #f87171; }
+  .legend-other { background: #525252; }
+  .legend-empty {
+    width: 22px;
+    height: 12px;
+    border-radius: 2px;
+    background: repeating-linear-gradient(45deg, rgba(0,243,255,0.08), rgba(0,243,255,0.08) 4px, transparent 4px, transparent 8px);
+    border: 1px dashed rgba(0,243,255,0.3);
+  }
+  .insight-box {
+    margin-top: 20px;
+    padding: 16px 20px;
+    background: rgba(0,243,255,0.05);
+    border-left: 3px solid #00f3ff;
+    border-radius: 4px;
+    font-size: 14px;
+    line-height: 1.7;
+  }
+  .insight-box strong { color: #00f3ff; }
+  footer {
+    margin-top: 60px;
+    padding-top: 24px;
+    border-top: 1px solid #222;
+    color: #b0b0b0;
+    font-size: 12px;
+    line-height: 1.6;
+  }
+  footer a { color: #c5c5c5; }
+
+  /* STRATEGY TAB NAV (shared across /strategy/* pages) */
+  .tnav {
+    position: sticky; top: 0; z-index: 1000;
+    display: flex; align-items: center; gap: 24px; flex-wrap: wrap;
+    padding: 14px 32px;
+    background: rgba(8, 11, 15, 0.92);
+    backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid #1a2230;
+    margin: -40px -32px 32px;
+    font-family: -apple-system, "SF Pro Display", "Pretendard Variable", "Pretendard", "Inter", system-ui, sans-serif;
+  }
+  .tnav-brand {
+    font-size: 16px; font-weight: 700; letter-spacing: -0.5px;
+    color: #fff; text-decoration: none; white-space: nowrap;
+  }
+  .tnav-brand .ac { color: #00f3ff; }
+  .tnav-chips { display: flex; gap: 6px; flex-wrap: wrap; }
+  .tnav-chip {
+    display: inline-flex; align-items: center;
+    padding: 6px 14px; border-radius: 999px;
+    font-size: 13px; font-weight: 500;
+    text-decoration: none; white-space: nowrap;
+    color: #c0c8d4;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: all 0.15s ease;
+  }
+  .tnav-chip:hover:not(.disabled):not(.active) {
+    background: rgba(0, 243, 255, 0.08);
+    color: #fff;
+    border-color: rgba(0, 243, 255, 0.3);
+  }
+  .tnav-chip.active {
+    background: rgba(0, 243, 255, 0.15);
+    color: #00f3ff;
+    border-color: rgba(0, 243, 255, 0.5);
+    font-weight: 600;
+  }
+  .tnav-chip.disabled { color: #4a5260; cursor: not-allowed; opacity: 0.6; pointer-events: none; }
+  @media (max-width: 768px) {
+    .tnav { padding: 12px 16px; gap: 12px; margin: -40px -32px 24px; }
+    .tnav-brand { font-size: 14px; }
+    .tnav-chip { font-size: 12px; padding: 5px 11px; }
+  }
+  @media print { .tnav { display: none !important; } }
+</style>
+</head>
+<body>
+<nav class="tnav" aria-label="Strategy sections">
+  <a href="/strategy" class="tnav-brand" aria-label="전략 허브로 이동"><span class="ac">Trust</span> Strategy</a>
+  <div class="tnav-chips">
+    <a href="/strategy/lean-canvas.html" class="tnav-chip">린 캔버스</a>
+    <a href="/strategy/positioning.html" class="tnav-chip active" aria-current="page">포지셔닝</a>
+    <span class="tnav-chip disabled" aria-disabled="true">프라이싱 전략</span>
+    <span class="tnav-chip disabled" aria-disabled="true">고객 발견</span>
+    <span class="tnav-chip disabled" aria-disabled="true">시장 분석</span>
+    <span class="tnav-chip disabled" aria-disabled="true">로드맵</span>
+  </div>
+</nav>
+<div class="wrap">
+  <h1>Trust Security <span class="accent">Positioning Matrix</span></h1>
+  <div class="subtitle">경쟁 지형에서 Trust가 앉은 "빈 칸" 시각화 — 2026-04-20 기준</div>
+
+  <!-- ═════════════════════════════════════════════════════════════════
+       Matrix 1: Price × Coverage Depth
+       ═════════════════════════════════════════════════════════════════ -->
+  <div class="matrix-block">
+    <h2>1. 가격 × 스캔 커버리지 깊이</h2>
+    <div class="matrix-sub">가로축: 최저 유료 월가 / 세로축: 스캔 영역 개수 (Secrets / SAST / SCA / DAST / AI Fix / MCP)</div>
+
+    <svg class="matrix-svg" viewBox="0 0 1200 760" xmlns="http://www.w3.org/2000/svg">
+      <!-- Empty quadrant highlight (Trust's zone) -->
+      <defs>
+        <pattern id="dash-cyan" patternUnits="userSpaceOnUse" width="10" height="10" patternTransform="rotate(45)">
+          <line x1="0" y1="0" x2="0" y2="10" stroke="rgba(0,243,255,0.2)" stroke-width="3"/>
+        </pattern>
+      </defs>
+      <!-- Trust's sweet spot: Low price + Max coverage -->
+      <rect x="140" y="60" width="320" height="140" fill="url(#dash-cyan)" stroke="rgba(0,243,255,0.4)" stroke-width="1" stroke-dasharray="4 4"/>
+      <text x="160" y="92" fill="#00f3ff" font-size="14" font-weight="600">저가 + 풀 커버리지</text>
+
+      <!-- Grid lines -->
+      <g stroke="#1f1f1f" stroke-width="1">
+        <!-- Vertical -->
+        <line x1="140" y1="60" x2="140" y2="660"/>
+        <line x1="300" y1="60" x2="300" y2="660"/>
+        <line x1="460" y1="60" x2="460" y2="660"/>
+        <line x1="620" y1="60" x2="620" y2="660"/>
+        <line x1="780" y1="60" x2="780" y2="660"/>
+        <line x1="940" y1="60" x2="940" y2="660"/>
+        <line x1="1100" y1="60" x2="1100" y2="660"/>
+        <!-- Horizontal -->
+        <line x1="140" y1="60" x2="1100" y2="60"/>
+        <line x1="140" y1="160" x2="1100" y2="160"/>
+        <line x1="140" y1="260" x2="1100" y2="260"/>
+        <line x1="140" y1="360" x2="1100" y2="360"/>
+        <line x1="140" y1="460" x2="1100" y2="460"/>
+        <line x1="140" y1="560" x2="1100" y2="560"/>
+        <line x1="140" y1="660" x2="1100" y2="660"/>
+      </g>
+
+      <!-- Y-axis labels (right-aligned at x=130) -->
+      <g font-size="13" fill="#f0f0f0" text-anchor="end">
+        <text x="130" y="115"><tspan font-weight="600" fill="#00f3ff">L6</tspan></text>
+        <text x="130" y="132" font-size="11">풀스펙 + MCP</text>
+        <text x="130" y="215"><tspan font-weight="600">L5</tspan></text>
+        <text x="130" y="232" font-size="11">+ AI Fix</text>
+        <text x="130" y="315"><tspan font-weight="600">L4</tspan></text>
+        <text x="130" y="332" font-size="11">+ AI Assist</text>
+        <text x="130" y="415"><tspan font-weight="600">L3</tspan></text>
+        <text x="130" y="432" font-size="11">3개 영역</text>
+        <text x="130" y="515"><tspan font-weight="600">L2</tspan></text>
+        <text x="130" y="532" font-size="11">2개 영역</text>
+        <text x="130" y="615"><tspan font-weight="600">L1</tspan></text>
+        <text x="130" y="632" font-size="11">단일 영역</text>
+      </g>
+
+      <!-- Y-axis title -->
+      <text x="40" y="360" fill="#ffffff" font-size="15" font-weight="700" transform="rotate(-90, 40, 360)" text-anchor="middle">스캔 커버리지</text>
+
+      <!-- X-axis labels -->
+      <g font-size="13" fill="#f0f0f0" text-anchor="middle">
+        <text x="220" y="685" font-weight="600">Free</text>
+        <text x="380" y="685" font-weight="600">$1–20</text>
+        <text x="540" y="685" font-weight="600">$20–50</text>
+        <text x="700" y="685" font-weight="600">$50–150</text>
+        <text x="860" y="685" font-weight="600">$150–500</text>
+        <text x="1020" y="685" font-weight="600">$500+</text>
+      </g>
+
+      <!-- X-axis title -->
+      <text x="620" y="720" fill="#ffffff" font-size="15" font-weight="700" text-anchor="middle">월 비용 (USD)</text>
+
+      <!-- ═══ Competitor dots ═══ -->
+
+      <!-- L6 row (y=110) -->
+      <!-- Trust @ $1-20, L6 -->
+      <g>
+        <circle cx="380" cy="110" r="18" fill="#00f3ff" stroke="#00f3ff" stroke-width="2" opacity="0.95"/>
+        <circle cx="380" cy="110" r="28" fill="none" stroke="#00f3ff" stroke-width="1" opacity="0.4"/>
+        <circle cx="380" cy="110" r="38" fill="none" stroke="#00f3ff" stroke-width="1" opacity="0.2"/>
+        <text x="380" y="115" fill="#0a0a0a" font-size="11" font-weight="700" text-anchor="middle">TRUST</text>
+        <text x="380" y="155" fill="#00f3ff" font-size="10" text-anchor="middle" font-weight="600">$9.90</text>
+      </g>
+      <!-- Aikido @ $150-500, L6 -->
+      <g>
+        <circle cx="860" cy="110" r="10" fill="#525252" stroke="#737373" stroke-width="1"/>
+        <text x="860" y="140" fill="#f0f0f0" font-size="11" text-anchor="middle">Aikido Basic</text>
+        <text x="860" y="153" fill="#bdbdbd" font-size="10" text-anchor="middle">$314/월</text>
+      </g>
+
+      <!-- L5 row (y=210) -->
+      <!-- (empty) -->
+
+      <!-- L4 row (y=310) — Most competitors live here -->
+      <!-- Semgrep Free (threat) @ Free, L4 -->
+      <g>
+        <circle cx="220" cy="310" r="10" fill="#0a0a0a" stroke="#f87171" stroke-width="2"/>
+        <text x="220" y="340" fill="#f87171" font-size="11" text-anchor="middle" font-weight="600">Semgrep Free</text>
+        <text x="220" y="353" fill="#d4d4d4" font-size="10" text-anchor="middle">≤10명 무료 (주요 위협)</text>
+      </g>
+      <!-- Snyk Team @ $20-50, L4 -->
+      <g>
+        <circle cx="515" cy="295" r="10" fill="#525252" stroke="#737373" stroke-width="1"/>
+        <text x="515" y="285" fill="#f0f0f0" font-size="11" text-anchor="middle">Snyk Team</text>
+        <text x="515" y="273" fill="#bdbdbd" font-size="10" text-anchor="middle">$25/dev</text>
+      </g>
+      <!-- Semgrep Team @ $20-50, L4 -->
+      <g>
+        <circle cx="565" cy="325" r="10" fill="#525252" stroke="#737373" stroke-width="1"/>
+        <text x="565" y="355" fill="#f0f0f0" font-size="11" text-anchor="middle">Semgrep Team</text>
+        <text x="565" y="368" fill="#bdbdbd" font-size="10" text-anchor="middle">$35/contributor</text>
+      </g>
+      <!-- GitHub Code Security @ $20-50, L4 -->
+      <g>
+        <circle cx="460" cy="325" r="10" fill="#525252" stroke="#737373" stroke-width="1"/>
+        <text x="460" y="345" fill="#f0f0f0" font-size="11" text-anchor="middle">GH Code Security</text>
+        <text x="460" y="358" fill="#bdbdbd" font-size="10" text-anchor="middle">$30/committer</text>
+      </g>
+      <!-- Checkmarx/Veracode @ $500+, L4 -->
+      <g>
+        <circle cx="1020" cy="310" r="10" fill="#525252" stroke="#737373" stroke-width="1"/>
+        <text x="1020" y="285" fill="#f0f0f0" font-size="11" text-anchor="middle">Checkmarx / Veracode</text>
+        <text x="1020" y="273" fill="#bdbdbd" font-size="10" text-anchor="middle">$1,500+/월 환산</text>
+      </g>
+
+      <!-- L3 row (y=410) — empty -->
+
+      <!-- L2 row (y=510) -->
+      <!-- Intruder @ $50-150, L2 -->
+      <g>
+        <circle cx="700" cy="510" r="10" fill="#525252" stroke="#737373" stroke-width="1"/>
+        <text x="700" y="485" fill="#f0f0f0" font-size="11" text-anchor="middle">Intruder</text>
+        <text x="700" y="472" fill="#bdbdbd" font-size="10" text-anchor="middle">€99/월</text>
+      </g>
+      <!-- StackHawk Pro @ $150-500, L2 -->
+      <g>
+        <circle cx="860" cy="510" r="10" fill="#525252" stroke="#737373" stroke-width="1"/>
+        <text x="860" y="485" fill="#f0f0f0" font-size="11" text-anchor="middle">StackHawk Pro</text>
+        <text x="860" y="472" fill="#bdbdbd" font-size="10" text-anchor="middle">최소 $210/월</text>
+      </g>
+      <!-- Claude Code Security @ $500+, L2 -->
+      <g>
+        <circle cx="1020" cy="510" r="10" fill="#525252" stroke="#737373" stroke-width="1"/>
+        <text x="1020" y="485" fill="#f0f0f0" font-size="11" text-anchor="middle">Claude Code Security</text>
+        <text x="1020" y="472" fill="#bdbdbd" font-size="10" text-anchor="middle">Enterprise 전용</text>
+      </g>
+
+      <!-- L1 row (y=610) -->
+      <!-- Socket @ $20-50, L1 -->
+      <g>
+        <circle cx="510" cy="610" r="10" fill="#525252" stroke="#737373" stroke-width="1"/>
+        <text x="510" y="595" fill="#f0f0f0" font-size="11" text-anchor="middle">Socket.dev</text>
+        <text x="510" y="582" fill="#bdbdbd" font-size="10" text-anchor="middle">$25/월</text>
+      </g>
+      <!-- SonarQube Team @ $20-50, L1 -->
+      <g>
+        <circle cx="575" cy="640" r="10" fill="#525252" stroke="#737373" stroke-width="1"/>
+        <text x="575" y="625" fill="#f0f0f0" font-size="11" text-anchor="middle">SonarQube</text>
+        <text x="575" y="612" fill="#bdbdbd" font-size="10" text-anchor="middle">~$32/월</text>
+      </g>
+      <!-- Detectify @ $50-150, L1 -->
+      <g>
+        <circle cx="700" cy="610" r="10" fill="#525252" stroke="#737373" stroke-width="1"/>
+        <text x="700" y="630" fill="#f0f0f0" font-size="11" text-anchor="middle">Detectify</text>
+        <text x="700" y="643" fill="#bdbdbd" font-size="10" text-anchor="middle">€88/월</text>
+      </g>
+    </svg>
+
+    <div class="legend">
+      <div class="legend-item"><span class="legend-dot legend-trust"></span>Trust (본 서비스)</div>
+      <div class="legend-item"><span class="legend-dot legend-threat"></span>주요 위협 경쟁자</div>
+      <div class="legend-item"><span class="legend-dot legend-other"></span>경쟁사</div>
+      <div class="legend-item"><span class="legend-empty"></span>빈 포지셔닝 슬롯</div>
+    </div>
+
+    <div class="insight-box">
+      <strong>핵심 관찰</strong><br>
+      L6(풀스펙+MCP) 구간에는 단 두 플레이어 — <strong>Trust ($9.90)</strong>와 <strong>Aikido Basic ($314)</strong>뿐.
+      Aikido 대비 <strong>97% 낮은 가격</strong>에 동등 커버리지 제공.
+      주요 위협은 Semgrep Free(≤10명 무료)이나 DAST·MCP 미지원으로 커버리지 2단계 아래.
+    </div>
+  </div>
+
+  <!-- ═════════════════════════════════════════════════════════════════
+       Matrix 2: Target × Scan Method
+       ═════════════════════════════════════════════════════════════════ -->
+  <div class="matrix-block">
+    <h2>2. 타겟 페르소나 × 스캔 방식</h2>
+    <div class="matrix-sub">가로축: 주 타겟 고객 / 세로축: 정적 코드 분석 ↔ 실배포 서비스 검증</div>
+
+    <svg class="matrix-svg" viewBox="0 0 1200 680" xmlns="http://www.w3.org/2000/svg">
+      <!-- Empty quadrant: Individual + Live service -->
+      <rect x="140" y="60" width="260" height="180" fill="url(#dash-cyan)" stroke="rgba(0,243,255,0.4)" stroke-width="1" stroke-dasharray="4 4"/>
+      <text x="160" y="92" fill="#00f3ff" font-size="14" font-weight="600">개인/인디 × 실배포 검증</text>
+
+      <!-- Grid -->
+      <g stroke="#1f1f1f" stroke-width="1">
+        <line x1="140" y1="60" x2="140" y2="560"/>
+        <line x1="400" y1="60" x2="400" y2="560"/>
+        <line x1="660" y1="60" x2="660" y2="560"/>
+        <line x1="920" y1="60" x2="920" y2="560"/>
+        <line x1="1100" y1="60" x2="1100" y2="560"/>
+        <line x1="140" y1="60" x2="1100" y2="60"/>
+        <line x1="140" y1="185" x2="1100" y2="185"/>
+        <line x1="140" y1="310" x2="1100" y2="310"/>
+        <line x1="140" y1="435" x2="1100" y2="435"/>
+        <line x1="140" y1="560" x2="1100" y2="560"/>
+      </g>
+
+      <!-- Y-axis labels -->
+      <g font-size="13" fill="#f0f0f0" text-anchor="end">
+        <text x="130" y="125" font-weight="600">실배포 서비스</text>
+        <text x="130" y="142" font-size="11">(DAST + AI Fix + MCP)</text>
+        <text x="130" y="245" font-weight="600">배포 + 코드 혼합</text>
+        <text x="130" y="262" font-size="11">(일부 DAST)</text>
+        <text x="130" y="370" font-weight="600">코드 + AI 수정</text>
+        <text x="130" y="387" font-size="11">(SAST + Autofix)</text>
+        <text x="130" y="495" font-weight="600">정적 코드 분석</text>
+        <text x="130" y="512" font-size="11">(SAST / Secrets / SCA)</text>
+      </g>
+
+      <!-- Y axis title -->
+      <text x="40" y="310" fill="#ffffff" font-size="15" font-weight="700" transform="rotate(-90, 40, 310)" text-anchor="middle">스캔 방식 (실제 서비스 검증 ↑)</text>
+
+      <!-- X-axis labels -->
+      <g font-size="13" fill="#f0f0f0" text-anchor="middle">
+        <text x="270" y="585" font-weight="600">개인 / 1인 창업자</text>
+        <text x="530" y="585" font-weight="600">스타트업 소규모 팀</text>
+        <text x="790" y="585" font-weight="600">SMB / 중견</text>
+        <text x="1010" y="585" font-weight="600">Enterprise</text>
+      </g>
+
+      <text x="620" y="625" fill="#ffffff" font-size="15" font-weight="700" text-anchor="middle">주 타겟 페르소나 →</text>
+
+      <!-- Row 1: 실배포 서비스 (y=125) -->
+      <!-- Trust @ Individual, Live service -->
+      <g>
+        <circle cx="270" cy="125" r="18" fill="#00f3ff" opacity="0.95"/>
+        <circle cx="270" cy="125" r="28" fill="none" stroke="#00f3ff" stroke-width="1" opacity="0.4"/>
+        <circle cx="270" cy="125" r="38" fill="none" stroke="#00f3ff" stroke-width="1" opacity="0.2"/>
+        <text x="270" y="130" fill="#0a0a0a" font-size="11" font-weight="700" text-anchor="middle">TRUST</text>
+      </g>
+      <!-- Aikido @ SMB, Live -->
+      <g>
+        <circle cx="790" cy="125" r="10" fill="#525252" stroke="#737373"/>
+        <text x="790" y="150" fill="#f0f0f0" font-size="11" text-anchor="middle">Aikido</text>
+      </g>
+      <!-- Detectify, Intruder, StackHawk @ SMB -->
+      <g>
+        <circle cx="750" cy="160" r="8" fill="#525252" stroke="#737373"/>
+        <text x="750" y="175" fill="#f0f0f0" font-size="10" text-anchor="middle">Detectify</text>
+      </g>
+      <g>
+        <circle cx="830" cy="160" r="8" fill="#525252" stroke="#737373"/>
+        <text x="830" y="175" fill="#f0f0f0" font-size="10" text-anchor="middle">StackHawk</text>
+      </g>
+      <g>
+        <circle cx="870" cy="130" r="8" fill="#525252" stroke="#737373"/>
+        <text x="870" y="145" fill="#f0f0f0" font-size="10" text-anchor="middle">Intruder</text>
+      </g>
+      <!-- Enterprise DAST: Qualys, Checkmarx DAST -->
+      <g>
+        <circle cx="1010" cy="125" r="10" fill="#525252" stroke="#737373"/>
+        <text x="1010" y="150" fill="#f0f0f0" font-size="11" text-anchor="middle">Qualys / Checkmarx DAST</text>
+      </g>
+
+      <!-- Row 2: 배포 + 코드 혼합 (y=245) -->
+      <!-- empty or GitHub Copilot workflow -->
+
+      <!-- Row 3: 코드 + AI 수정 (y=370) -->
+      <!-- GH Code Security @ Small team -->
+      <g>
+        <circle cx="530" cy="370" r="10" fill="#525252" stroke="#737373"/>
+        <text x="530" y="395" fill="#f0f0f0" font-size="11" text-anchor="middle">GitHub Code Security</text>
+      </g>
+      <!-- Snyk Code @ Small team/SMB -->
+      <g>
+        <circle cx="600" cy="395" r="10" fill="#525252" stroke="#737373"/>
+        <text x="600" y="415" fill="#f0f0f0" font-size="11" text-anchor="middle">Snyk Code</text>
+      </g>
+      <!-- Claude Code Security @ Enterprise -->
+      <g>
+        <circle cx="1010" cy="370" r="10" fill="#525252" stroke="#737373"/>
+        <text x="1010" y="395" fill="#f0f0f0" font-size="11" text-anchor="middle">Claude Code Security</text>
+        <text x="1010" y="410" fill="#bdbdbd" font-size="10" text-anchor="middle">(Enterprise only)</text>
+      </g>
+      <!-- Semgrep Team AI Assist -->
+      <g>
+        <circle cx="460" cy="395" r="10" fill="#525252" stroke="#737373"/>
+        <text x="460" y="415" fill="#f0f0f0" font-size="11" text-anchor="middle">Semgrep Team</text>
+      </g>
+
+      <!-- Row 4: 정적 코드 분석 (y=495) -->
+      <!-- Semgrep Free (threat) @ Individual -->
+      <g>
+        <circle cx="270" cy="495" r="10" fill="#0a0a0a" stroke="#f87171" stroke-width="2"/>
+        <text x="270" y="480" fill="#f87171" font-size="11" text-anchor="middle" font-weight="600">Semgrep Free (≤10)</text>
+        <text x="270" y="467" fill="#d4d4d4" font-size="10" text-anchor="middle">↑ 주요 위협</text>
+      </g>
+      <!-- Socket @ Small team -->
+      <g>
+        <circle cx="500" cy="495" r="10" fill="#525252" stroke="#737373"/>
+        <text x="500" y="520" fill="#f0f0f0" font-size="11" text-anchor="middle">Socket.dev</text>
+      </g>
+      <!-- SonarQube @ Small team -->
+      <g>
+        <circle cx="570" cy="520" r="10" fill="#525252" stroke="#737373"/>
+        <text x="570" y="540" fill="#f0f0f0" font-size="11" text-anchor="middle">SonarQube</text>
+      </g>
+      <!-- Snyk Free @ Individual -->
+      <g>
+        <circle cx="330" cy="525" r="10" fill="#525252" stroke="#737373"/>
+        <text x="330" y="545" fill="#f0f0f0" font-size="11" text-anchor="middle">Snyk Free</text>
+      </g>
+      <!-- Veracode @ Enterprise -->
+      <g>
+        <circle cx="1010" cy="495" r="10" fill="#525252" stroke="#737373"/>
+        <text x="1010" y="520" fill="#f0f0f0" font-size="11" text-anchor="middle">Veracode SAST</text>
+      </g>
+    </svg>
+
+    <div class="legend">
+      <div class="legend-item"><span class="legend-dot legend-trust"></span>Trust</div>
+      <div class="legend-item"><span class="legend-dot legend-threat"></span>주요 위협</div>
+      <div class="legend-item"><span class="legend-dot legend-other"></span>경쟁사</div>
+      <div class="legend-item"><span class="legend-empty"></span>빈 포지셔닝 슬롯</div>
+    </div>
+
+    <div class="insight-box">
+      <strong>핵심 관찰</strong><br>
+      <strong>개인/1인 창업자 × 실배포 검증</strong> 사분면은 Trust 외 경쟁자가 실질적으로 부재.
+      Detectify·StackHawk·Intruder는 모두 SMB 이상 타겟 + 월 $100+ 가격대.
+      Semgrep Free가 개인 세그먼트를 일부 점유하나 <strong>정적 코드 분석에 국한</strong>, 배포된 서비스 검증 불가능.
+    </div>
+  </div>
+
+  <!-- ═════════════════════════════════════════════════════════════════
+       Summary: 3 positioning axes
+       ═════════════════════════════════════════════════════════════════ -->
+  <div class="matrix-block">
+    <h2>3. Trust의 "빈 슬롯" 3중 교집합</h2>
+    <div class="matrix-sub">두 매트릭스를 교차시키면, Trust가 선점한 영역은 아래 3중 조건을 모두 만족하는 시장 — 경쟁자 0</div>
+
+    <svg class="matrix-svg" viewBox="0 0 1200 780" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+      <!-- 3 overlapping circles (Venn) — 중앙 정렬: 캔버스 1200x780, 다이어그램 중심 (600, 400) -->
+      <circle cx="460" cy="340" r="200" fill="rgba(0,243,255,0.12)" stroke="#00f3ff" stroke-width="1.5" opacity="0.85"/>
+      <circle cx="740" cy="340" r="200" fill="rgba(0,243,255,0.12)" stroke="#00f3ff" stroke-width="1.5" opacity="0.85"/>
+      <circle cx="600" cy="500" r="200" fill="rgba(0,243,255,0.12)" stroke="#00f3ff" stroke-width="1.5" opacity="0.85"/>
+
+      <!-- 외부 타이틀 라벨 (각 원 바깥) -->
+      <text x="200" y="180" fill="#ffffff" font-size="20" font-weight="700" text-anchor="middle">$10 이하</text>
+      <text x="200" y="205" fill="#f0f0f0" font-size="13" text-anchor="middle">개인 감당 가능</text>
+
+      <text x="1000" y="180" fill="#ffffff" font-size="20" font-weight="700" text-anchor="middle">풀 커버리지</text>
+      <text x="1000" y="205" fill="#f0f0f0" font-size="13" text-anchor="middle">URL + Repo + AI + MCP</text>
+
+      <text x="600" y="735" fill="#ffffff" font-size="20" font-weight="700" text-anchor="middle">실배포 서비스 검증</text>
+      <text x="600" y="757" fill="#f0f0f0" font-size="13" text-anchor="middle">코드 아닌 runtime에서 DAST</text>
+
+      <!-- 중심 3중 교집합 (Trust) -->
+      <circle cx="600" cy="420" r="62" fill="#00f3ff" stroke="#ffffff" stroke-width="3"/>
+      <text x="600" y="418" fill="#0a0a0a" font-size="22" font-weight="700" text-anchor="middle">TRUST</text>
+      <text x="600" y="442" fill="#0a0a0a" font-size="13" font-weight="600" text-anchor="middle">$9.90/월</text>
+
+      <!-- 단일 영역 (각 원의 비중첩 부분) -->
+      <!-- 좌측만 (Semgrep Free) -->
+      <text x="305" y="395" fill="#f87171" font-size="12" text-anchor="middle" font-weight="600">Semgrep Free (≤10명)</text>
+      <text x="305" y="413" fill="#bdbdbd" font-size="10" text-anchor="middle">정적 분석만</text>
+
+      <!-- 우측만 (Aikido) -->
+      <text x="895" y="395" fill="#f0f0f0" font-size="12" text-anchor="middle" font-weight="600">Aikido Basic</text>
+      <text x="895" y="413" fill="#bdbdbd" font-size="10" text-anchor="middle">$314/월 (개인 ×)</text>
+
+      <!-- 하단만 (StackHawk/Detectify/Intruder) -->
+      <text x="600" y="630" fill="#f0f0f0" font-size="12" text-anchor="middle" font-weight="600">StackHawk / Detectify / Intruder</text>
+      <text x="600" y="648" fill="#bdbdbd" font-size="10" text-anchor="middle">$99~$210/월 (개인 ×, 코드 ×)</text>
+
+      <!-- 2중 교집합 -->
+      <!-- 좌∩우 (상단 lens, 하단원 위쪽) -->
+      <text x="600" y="245" fill="#bdbdbd" font-size="11" text-anchor="middle">(교집합 — 없음)</text>
+
+      <!-- 좌∩하 (좌하단 lens) -->
+      <text x="430" y="525" fill="#bdbdbd" font-size="11" text-anchor="middle">(교집합 — 없음)</text>
+
+      <!-- 우∩하 (우하단 lens) — Checkmarx/Veracode -->
+      <text x="770" y="520" fill="#f0f0f0" font-size="11" text-anchor="middle" font-weight="600">Checkmarx / Veracode</text>
+      <text x="770" y="535" fill="#bdbdbd" font-size="10" text-anchor="middle">$1,500+/월</text>
+    </svg>
+
+    <div class="insight-box">
+      <strong>3중 교집합 — Trust 단독 영역</strong><br>
+      <strong>$10 이하 + 풀 커버리지 + 실배포 서비스 검증</strong> 세 조건을 동시에 만족하는 서비스는 2026-04-20 기준 <strong>Trust가 유일</strong>.
+      Aikido는 풀 커버리지지만 $314로 개인 접근 불가. StackHawk은 실배포 검증이지만 $210 + DAST 단일 영역.
+      Checkmarx/Veracode는 풀 커버리지 + 실배포 검증 가능하나 월 $1,500+ Enterprise 전용.
+    </div>
+  </div>
+
+  <footer>
+    <strong style="color:#e5e5e5;">작성 근거</strong><br>
+    가격·기능 데이터 출처: Snyk Plans · Aikido Pricing · Socket Pricing · Semgrep Pricing · GitHub Code Security Docs · SonarSource · Detectify · Intruder · StackHawk G2 · Checkmarx vs Veracode Konvu · Anthropic Claude Code Security (2026-02-20).
+    상세 URL은 <code>docs/CUSTOMER_DISCOVERY_STRATEGY.md §15</code> 참조.<br><br>
+    <strong style="color:#e5e5e5;">해석 주의</strong> — 매트릭스 위치는 "최저 유료 플랜" + "공식 제공 기능 범위"를 기준으로 한 단순화. 실제 기능 품질, 통합성, 시장 점유율은 별개.
+    Trust의 위치는 <em>선점된 시장</em>이 아니라 <em>아직 경쟁자가 안 들어온 빈 슬롯</em>으로 읽어야 함.
+  </footer>
+</div>
+</body>
+</html>

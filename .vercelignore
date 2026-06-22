@@ -1,0 +1,30 @@
+# Non-essential files for Vercel build
+*.pdf
+*.docx
+*.doc
+*.pptx
+*.ppt
+*.jpeg
+*.gif
+*.mp4
+
+# Dev artifacts (root-level screenshots)
+qa-*.png
+tier-*.png
+Slide*.png
+og_image_*
+
+# Directories not needed for frontend build
+tests/
+backend/
+docs/
+본선/
+ignore/
+Pretendard-1.3.9/
+.playwright-mcp/
+mcp-server/
+supabase/
+
+# Misc
+repo-snapshot.md
+trust-lean-canvas*.html

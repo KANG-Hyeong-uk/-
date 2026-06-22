@@ -1,0 +1,118 @@
+# Dependencies
+node_modules/
+.pnp/
+.pnp.js
+.yarn/install-state.gz
+
+# Testing
+coverage/
+
+# Next.js
+.next/
+out/
+
+# Production
+build/
+dist/
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Vercel
+.vercel
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+# lib/ - removed (frontend lib/ now tracked)
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+venv/
+.venv/
+ENV/
+
+# Claude Code local settings (may contain secrets)
+.claude/settings.local.json
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Security scan results (optional - may want to keep)
+security_scan/
+nuclei_scan_results/
+nuclei_test_results/
+
+# Screenshots & images (dev artifacts)
+*.png
+*.jpg
+*.jpeg
+
+# Allow OG image
+!public/og.png
+
+# Temporary files
+*.tmp
+*.temp
+/tmp/
+
+# Logs
+logs/
+*.log
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Ignore folder
+ignore/
+
+# Development scripts & snapshots
+nuclei_test.py
+vibe_security_scanner_fixed.py
+repo-snapshot.md
+
+# Documents & media (non-development files)
+*.pdf
+*.docx
+*.doc
+*.pptx
+*.ppt
+*.mp4
+*.gif
+본선/
+.playwright-mcp/

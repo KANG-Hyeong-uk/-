@@ -1,0 +1,56 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: trust
+      POSTGRES_USER: trust
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-trustpassword}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./schema.sql:/docker-entrypoint-initdb.d/schema.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U trust -d trust"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      DATABASE_URL: postgresql://trust:${POSTGRES_PASSWORD:-trustpassword}@db:5432/trust
+      JWT_SECRET: ${JWT_SECRET}
+      GEMINI_API_KEY: ${GEMINI_API_KEY}
+      ENVIRONMENT: ${ENVIRONMENT:-production}
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:-}
+      RESEND_API_KEY: ${RESEND_API_KEY:-}
+      GITHUB_APP_CLIENT_ID: ${GITHUB_APP_CLIENT_ID:-}
+      GITHUB_APP_CLIENT_SECRET: ${GITHUB_APP_CLIENT_SECRET:-}
+      GITHUB_WEBHOOK_SECRET: ${GITHUB_WEBHOOK_SECRET:-}
+      VERCEL_OAUTH_CLIENT_ID: ${VERCEL_OAUTH_CLIENT_ID:-}
+      VERCEL_OAUTH_CLIENT_SECRET: ${VERCEL_OAUTH_CLIENT_SECRET:-}
+      PADDLE_API_KEY: ${PADDLE_API_KEY:-}
+      PADDLE_WEBHOOK_SECRET: ${PADDLE_WEBHOOK_SECRET:-}
+      PADDLE_PRICE_MONTHLY: ${PADDLE_PRICE_MONTHLY:-}
+      PADDLE_PRICE_YEARLY: ${PADDLE_PRICE_YEARLY:-}
+      PADDLE_DISCOUNT_ID: ${PADDLE_DISCOUNT_ID:-}
+      VAPID_PRIVATE_KEY: ${VAPID_PRIVATE_KEY:-}
+      VAPID_PUBLIC_KEY: ${VAPID_PUBLIC_KEY:-}
+      VAPID_EMAIL: ${VAPID_EMAIL:-mailto:contact@trust-scan.me}
+      ADMIN_SECRET: ${ADMIN_SECRET:-}
+      SCAN_OUTPUT_DIR: /tmp/trust_scans
+      NUCLEI_TEMPLATES_DIR: /root/nuclei-templates
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - scan_output:/tmp/trust_scans
+
+volumes:
+  postgres_data:
+  scan_output:

@@ -1,0 +1,20 @@
+startCommand:
+  type: http
+  configSchema:
+    type: object
+    properties:
+      backendUrl:
+        type: string
+        title: "Backend API URL"
+        description: "Trust Security backend API URL. Uses the default hosted backend if not provided."
+        default: "https://trust-backend-knnd76vaqq-du.a.run.app"
+      scanTimeout:
+        type: integer
+        title: "Scan Timeout (seconds)"
+        description: "Maximum time in seconds to wait for scan results before timing out."
+        default: 300
+        minimum: 60
+        maximum: 600
+    exampleConfig:
+      backendUrl: "https://trust-backend-knnd76vaqq-du.a.run.app"
+      scanTimeout: 300

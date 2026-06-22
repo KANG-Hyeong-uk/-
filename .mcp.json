@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "supabase": {
+      "type": "http",
+      "url": "https://mcp.supabase.com/mcp"
+    },
+    "trust-security": {
+      "type": "http",
+      "url": "https://trust-mcp-knnd76vaqq-du.a.run.app/mcp"
+    }
+  }
+}

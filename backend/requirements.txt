@@ -1,0 +1,46 @@
+# Trust Backend Dependencies
+
+# FastAPI framework
+fastapi>=0.109.0
+uvicorn[standard]>=0.27.0
+
+# Data validation
+pydantic>=2.5.0
+pydantic-settings>=2.1.0
+
+# PostgreSQL async driver
+asyncpg>=0.29.0
+
+# Google Gemini API
+google-genai>=1.0.0
+
+# Async support
+httpx>=0.26.0
+python-multipart>=0.0.6
+
+# Environment variables
+python-dotenv>=1.0.0
+
+# Structured logging
+structlog>=24.1.0
+
+# PDF report generation
+reportlab>=4.1.0
+
+# Cron expression parsing (for scheduled scans)
+croniter>=2.0.0
+
+# MCP Server (Model Context Protocol)
+mcp>=1.0.0
+
+# Semgrep SAST engine
+semgrep>=1.56.0
+
+# Web Push notifications
+pywebpush>=2.0.0
+PyJWT>=2.8.0
+
+# Testing
+pytest>=8.0.0
+pytest-asyncio>=0.23.0
+pytest-cov>=4.1.0

@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trust — Lean Canvas v3</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css">
+<style>
+  :root {
+    --bg: #080b0f;
+    --sf: #0e1318;
+    --bd: #1a2230;
+    --bb: #243040;
+    --ac: #40e8dd;
+    --t: #dde4ed;
+    --td: #667788;
+    --tm: #9aacbe;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--t); font-family: 'Pretendard Variable', 'Pretendard', sans-serif; padding: 32px 32px 48px; min-width: 1040px; }
+
+  .mono { font-family: 'Pretendard Variable', 'Pretendard', sans-serif; }
+  .hd-name { font-family: 'Syne', sans-serif; }
+
+  /* HEADER */
+  .hd { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid var(--bb); }
+  .hd-name { font-size: 32px; font-weight: 800; letter-spacing: -1.5px; color: var(--t); }
+  .hd-sub { font-size: 10px; color: var(--td); letter-spacing: 0.1em; text-transform: uppercase; margin-top: 3px; }
+  .hd-r { display: flex; align-items: center; gap: 12px; }
+  .hd-badge { font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; padding: 2px 8px; border-radius: 2px; border: 1px solid var(--ac); color: var(--ac); }
+  .hd-date { font-size: 9px; color: var(--td); }
+
+  /* UVP */
+  .uvp { background: var(--sf); border: 1px solid var(--bb); border-left: 3px solid var(--ac); border-radius: 3px; padding: 14px 20px; margin-bottom: 20px; }
+  .uvp-l { font-size: 10px; font-weight: 700; letter-spacing: 0.08em; color: var(--ac); margin-bottom: 6px; }
+  .uvp-t { font-size: 14px; font-weight: 700; line-height: 1.45; letter-spacing: 0.05em; color: var(--t); }
+
+  /* GRID */
+  .gr { display: grid; gap: 0; }
+  .g1 { grid-template-columns: 1fr 1fr 1.1fr 1fr 1fr; border: 1px solid var(--bb); border-radius: 4px 4px 0 0; overflow: hidden; }
+  .g2 { grid-template-columns: 1fr 1fr 1fr; border: 1px solid var(--bb); border-top: none; overflow: hidden; }
+  .g3 { grid-template-columns: 1fr 1fr; border: 1px solid var(--bb); border-top: none; border-bottom: 2px solid #3a4a5a; overflow: hidden; }
+
+  /* CELL */
+  .c { background: var(--sf); border-right: 1px solid var(--bb); }
+  .c:last-child { border-right: none; }
+  .ch { font-size: 11px; font-weight: 700; letter-spacing: 0.04em; padding: 9px 12px 8px; border-bottom: 1px solid var(--bb); color: var(--t); }
+  .cb { padding: 12px; }
+
+  /* LIST ITEM */
+  .i { font-size: 11px; color: var(--tm); line-height: 1.5; padding-left: 10px; position: relative; margin-bottom: 8px; }
+  .i:last-child { margin-bottom: 0; }
+  .i::before { content: ''; position: absolute; left: 0; top: 6px; width: 3px; height: 3px; border-radius: 50%; background: var(--bb); }
+  .i strong { color: var(--t); font-weight: 600; }
+
+  /* HIGHLIGHT CELL — 고유의 가치 제안 */
+  .c-hi { background: #0a1610; }
+  .c-hi .ch { color: var(--ac); }
+  .c-hi .i { color: var(--t); }
+
+  /* STAT ROW */
+  .sr { display: flex; border-bottom: 1px solid var(--bd); }
+  .sr:last-child { border-bottom: none; }
+  .sl { font-size: 9px; font-weight: 600; letter-spacing: 0.06em; color: var(--td); padding: 7px 10px; border-right: 1px solid var(--bd); min-width: 52px; display: flex; align-items: center; background: rgba(255,255,255,0.02); flex-shrink: 0; }
+  .sv { font-size: 11px; color: var(--tm); padding: 7px 12px; line-height: 1.4; flex: 1; }
+  .sv strong { color: var(--t); font-weight: 600; }
+
+  /* JOURNEY */
+  .jr { display: flex; border-bottom: 1px solid var(--bd); }
+  .jr:last-child { border-bottom: none; }
+  .js { font-size: 9px; font-weight: 700; letter-spacing: 0.06em; padding: 7px 10px; border-right: 1px solid var(--bd); min-width: 52px; display: flex; align-items: center; color: var(--td); background: rgba(255,255,255,0.02); flex-shrink: 0; }
+  .jd { font-size: 11px; color: var(--tm); padding: 7px 12px; line-height: 1.4; flex: 1; }
+  .jd strong { color: var(--t); font-weight: 600; }
+
+  /* METRIC */
+  .mr { display: flex; align-items: center; gap: 8px; padding: 7px 12px; border-bottom: 1px solid var(--bd); font-size: 11px; color: var(--tm); }
+  .mr:last-child { border-bottom: none; }
+  .mn { font-size: 9px; color: var(--td); flex-shrink: 0; width: 16px; }
+  .mr.hi { background: rgba(0,229,160,0.03); color: var(--ac); font-weight: 600; }
+
+  /* COST */
+  .ct { width: 100%; border-collapse: collapse; }
+  .ct td { padding: 7px 12px; border-bottom: 1px solid var(--bd); font-size: 11px; vertical-align: middle; }
+  .ct tr:last-child td { border-bottom: none; }
+  .ct .cn { color: var(--tm); }
+  .ct .cp { font-weight: 600; color: var(--t); text-align: right; white-space: nowrap; width: 100px; }
+
+  /* REVENUE */
+  .rr { display: flex; align-items: center; gap: 10px; padding: 8px 12px; border-bottom: 1px solid var(--bd); }
+  .rr:last-child { border-bottom: none; }
+  .rt { font-size: 8px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding: 2px 6px; border-radius: 2px; flex-shrink: 0; background: rgba(255,255,255,0.06); color: var(--tm); border: 1px solid var(--bb); }
+  .rp { font-size: 11px; font-weight: 600; color: var(--t); white-space: nowrap; }
+  .rd { font-size: 11px; color: var(--tm); }
+
+  /* UNIT ECONOMICS */
+  .g4 { grid-template-columns: 1fr 1fr; border: 1px solid var(--bb); border-radius: 0 0 4px 4px; overflow: hidden; margin-top: 12px; }
+  .ue-grid { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 0; }
+  .ue-card { padding: 12px 14px; border-right: 1px solid var(--bd); }
+  .ue-card:last-child { border-right: none; }
+  .ue-val { font-size: 18px; font-weight: 700; color: var(--t); margin-bottom: 2px; }
+  .ue-val.green { color: var(--ac); }
+  .ue-lbl { font-size: 9px; color: var(--td); letter-spacing: 0.04em; }
+
+  .sim-tbl { width: 100%; border-collapse: collapse; }
+  .sim-tbl th { font-size: 9px; font-weight: 600; color: var(--td); letter-spacing: 0.04em; padding: 7px 10px; border-bottom: 1px solid var(--bb); text-align: right; background: rgba(255,255,255,0.02); width: 25%; }
+  .sim-tbl th:first-child { text-align: left; }
+  .sim-tbl td { font-size: 11px; padding: 7px 10px; border-bottom: 1px solid var(--bd); text-align: right; color: var(--tm); width: 25%; }
+  .sim-tbl td:first-child { text-align: left; color: var(--td); font-weight: 600; }
+  .sim-tbl tr:last-child td { border-bottom: none; }
+  .sim-tbl td strong { color: var(--t); font-weight: 600; }
+  .sim-tbl td.acc { color: var(--ac); font-weight: 600; }
+  .sim-note { font-size: 9px; color: var(--td); padding: 6px 10px; border-top: 1px dashed var(--bd); line-height: 1.4; }
+
+  /* PRINT — 16:9 landscape PDF */
+  @media print {
+    @page {
+      size: 1280px 720px;
+      margin: 0;
+    }
+    body {
+      padding: 20px 24px 24px;
+      min-width: 0;
+      width: 1280px;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+      color-adjust: exact;
+    }
+    .hd { margin-bottom: 12px; padding-bottom: 10px; }
+    .hd-name { font-size: 24px; }
+    .uvp { padding: 10px 16px; margin-bottom: 12px; }
+    .uvp-t { font-size: 11px; }
+    .uvp > div:last-child { font-size: 9px !important; margin-top: 4px !important; }
+    .ch { font-size: 9px; padding: 6px 10px 5px; }
+    .cb { padding: 8px 10px; }
+    .i { font-size: 9px; margin-bottom: 5px; line-height: 1.4; }
+    .ue-card { padding: 8px 10px; }
+    .ue-val { font-size: 14px; }
+    .ue-lbl { font-size: 7.5px; }
+    .sl, .js { font-size: 7px; padding: 5px 8px; min-width: 40px; }
+    .sv, .jd { font-size: 9px; padding: 5px 10px; }
+    .sr, .jr { }
+    .mr { font-size: 9px; padding: 5px 10px; }
+    .mn { font-size: 7.5px; }
+    .ct td { font-size: 9px; padding: 5px 10px; }
+    .rr { padding: 5px 10px; }
+    .rt { font-size: 7px; }
+    .rp { font-size: 9px; }
+    .rd { font-size: 9px; }
+    .sim-tbl th { font-size: 7.5px; padding: 5px 8px; }
+    .sim-tbl td { font-size: 9px; padding: 5px 8px; }
+    .sim-note { font-size: 7.5px; padding: 4px 8px; }
+    .g4 { margin-top: 8px; }
+    .fg { font-size: 7.5px; padding: 4px 8px; }
+  }
+
+  /* PRESENTATION MODE */
+  [data-step] { transition: box-shadow 0.3s ease, border-color 0.3s ease; }
+  [data-step].active { box-shadow: inset 0 0 0 2px var(--ac), inset 0 0 16px rgba(64,232,221,0.08); background-color: rgba(64,232,221,0.04); position: relative; z-index: 1; }
+  .step-indicator { position: fixed; bottom: 12px; right: 16px; font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--td); z-index: 99; }
+
+  /* STRATEGY TAB NAV (shared across /strategy/* pages) */
+  .tnav {
+    position: sticky; top: 0; z-index: 1000;
+    display: flex; align-items: center; gap: 24px; flex-wrap: wrap;
+    padding: 14px 32px;
+    background: rgba(8, 11, 15, 0.92);
+    backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid #1a2230;
+    margin: -32px -32px 28px;
+    font-family: 'Pretendard Variable', 'Pretendard', -apple-system, sans-serif;
+  }
+  .tnav-brand {
+    font-family: 'Syne', sans-serif;
+    font-size: 16px; font-weight: 700; letter-spacing: -0.5px;
+    color: #fff; text-decoration: none; white-space: nowrap;
+  }
+  .tnav-brand .ac { color: #00f3ff; }
+  .tnav-chips { display: flex; gap: 6px; flex-wrap: wrap; }
+  .tnav-chip {
+    display: inline-flex; align-items: center;
+    padding: 6px 14px; border-radius: 999px;
+    font-size: 13px; font-weight: 500;
+    text-decoration: none; white-space: nowrap;
+    color: #c0c8d4;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: all 0.15s ease;
+  }
+  .tnav-chip:hover:not(.disabled):not(.active) {
+    background: rgba(0, 243, 255, 0.08);
+    color: #fff;
+    border-color: rgba(0, 243, 255, 0.3);
+  }
+  .tnav-chip.active {
+    background: rgba(0, 243, 255, 0.15);
+    color: #00f3ff;
+    border-color: rgba(0, 243, 255, 0.5);
+    font-weight: 600;
+  }
+  .tnav-chip.disabled { color: #4a5260; cursor: not-allowed; opacity: 0.6; pointer-events: none; }
+  @media (max-width: 768px) {
+    .tnav { padding: 12px 16px; gap: 12px; margin: -32px -32px 20px; }
+    .tnav-brand { font-size: 14px; }
+    .tnav-chip { font-size: 12px; padding: 5px 11px; }
+  }
+  @media print { .tnav { display: none !important; } }
+</style>
+</head>
+<body>
+<nav class="tnav" aria-label="Strategy sections">
+  <a href="/strategy" class="tnav-brand" aria-label="전략 허브로 이동"><span class="ac">Trust</span> Strategy</a>
+  <div class="tnav-chips">
+    <a href="/strategy/lean-canvas.html" class="tnav-chip active" aria-current="page">린 캔버스</a>
+    <a href="/strategy/positioning.html" class="tnav-chip">포지셔닝</a>
+    <span class="tnav-chip disabled" aria-disabled="true">프라이싱 전략</span>
+    <span class="tnav-chip disabled" aria-disabled="true">고객 발견</span>
+    <span class="tnav-chip disabled" aria-disabled="true">시장 분석</span>
+    <span class="tnav-chip disabled" aria-disabled="true">로드맵</span>
+  </div>
+</nav>
+
+<!-- HEADER -->
+<div class="hd">
+  <div>
+    <div class="hd-name">Trust</div>
+  </div>
+  <div class="hd-r">
+    <span class="hd-badge mono">린 캔버스</span>
+  </div>
+</div>
+
+<!-- UVP -->
+<div class="uvp" data-step="0">
+  <div class="uvp-l mono">핵심 가치 제안</div>
+  <div class="uvp-t">비싸고 어려운 보안·모의해킹, 이제 끝.<br>단 5분, $10로 점검하는 바이브코더를 위한, 바이브코더에 의한, 바이브코더의 보안스캐너</div>
+  <div style="font-size:11px;color:var(--tm);margin-top:8px;line-height:1.5;">클로드, GPT 등, AI로는 찾을 수 없는 내 서비스의 취약점, URL 입력 한번이면 5분 내로 보안 점검 — 단 $9.9면 무제한</div>
+</div>
+
+<!-- ROW 1 -->
+<div class="gr g1">
+
+  <div class="c" data-step="1">
+    <div class="ch mono">문제</div>
+    <div class="cb">
+      <div class="i"><strong>86%</strong>의 개발자가 보안을 우선순위로 보지 않음 — 능동적 점검은 소수만</div>
+      <div class="i">AI 코드 리뷰로는 SSL·헤더·서버 설정 등 <strong>배포 후 취약점을 못 찾음</strong></div>
+      <div class="i">기존 모의해킹 <strong>건당 $5K+</strong>, Snyk <strong>$125+/월</strong> — 개인 접근 불가</div>
+    </div>
+  </div>
+
+  <div class="c" data-step="4">
+    <div class="ch mono">솔루션</div>
+    <div class="cb">
+      <div class="i"><strong>URL 입력</strong> → 5,000+ 공격 템플릿으로 실제 HTTP 테스트</div>
+      <div class="i">AI <strong>수정 코드</strong> 생성 + <strong>원클릭</strong> GitHub PR</div>
+      <div class="i"><strong>자동 정기 스캔</strong> — 유저가 안 해도 알아서 돌아감</div>
+      <div class="i"><strong>GitHub Action</strong> — PR마다 자동 보안 체크</div>
+      <div class="i"><strong>IDE 내</strong> 바로 실행 (MCP)</div>
+    </div>
+  </div>
+
+  <div class="c c-hi" data-step="3">
+    <div class="ch mono">고유의 가치 제안</div>
+    <div class="cb">
+      <div class="i">우리 서비스에 해커가 들어올 수 있는지 <strong>실제로 확인</strong></div>
+      <div class="i">직접 관리하지 않아도 <strong>알아서 매일</strong>, Auto-Detection & Notification</div>
+      <div class="i">취약점 발견 시 <strong>수정 코드까지 생성 및 반영</strong></div>
+      <div class="i">기존 회당 500만원, 값비싼 모의해킹 → <strong>월 $9.9 무제한</strong> 점검</div>
+    </div>
+  </div>
+
+  <div class="c" data-step="5">
+    <div class="ch mono">경쟁우위</div>
+    <div class="cb">
+      <div class="i"><strong>Semantic Security</strong> — 보안 전문가 한 명의 빠른 맥락 인지 수준. 기존 SAST 정적분석(SonarQube 등)과 차별화</div>
+      <div class="i"><strong>DAST</strong> — AI 코드 리뷰가 못 찾는 배포 후 취약점 탐지</div>
+      <div class="i"><strong>보완 포지션</strong> — Claude Code Security와 경쟁이 아닌 보완 관계</div>
+      <div class="i"><strong>솔직한 포지션</strong> — 전방위 보안 전문 서비스 수준은 아님. 대신 빠르고, 싸고, 자동</div>
+    </div>
+  </div>
+
+  <div class="c" data-step="2">
+    <div class="ch mono">고객군</div>
+    <div class="cb">
+      <div class="i"><strong>글로벌 바이브코더</strong> — AI로 만들고 바로 배포하는 1인 개발자 · 약 <strong>1,400만명</strong></div>
+      <div class="i"><strong>초기 스타트업</strong> — 보안 전담 없는 2~10명 팀</div>
+      <div style="font-size:10px;color:var(--tm);margin-top:10px;padding-left:10px;">▸ 현재 80% 바이브코더 집중 · Team Plan 출시 후 스타트업 확대</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ROW 2 -->
+<div class="gr g2">
+
+  <div class="c" data-step="6">
+    <div class="ch mono">시장</div>
+    <div class="sr">
+      <div class="sl mono">TAM</div>
+      <div class="sv">AppSec <strong>$33.7B</strong> · CAGR 18%</div>
+    </div>
+    <div class="sr">
+      <div class="sl mono">SAM</div>
+      <div class="sv">개발자 보안 도구 <strong>~$5B</strong></div>
+    </div>
+    <div class="sr">
+      <div class="sl mono">SOM</div>
+      <div class="sv">~4,700만 × 1% × $120 ≈ <strong>$56M</strong></div>
+    </div>
+    <div class="sr">
+      <div class="sl mono">NOW</div>
+      <div class="sv">AI가 코드 분석(SAST) 시작 → <strong>배포 후 검증(DAST)</strong> 수요 폭발</div>
+    </div>
+  </div>
+
+  <div class="c">
+    <div class="ch mono">핵심지표</div>
+    <div class="mr"><span class="mn mono">01</span><strong>주간 스캔 수</strong> — 제품이 쓰이고 있는가</div>
+    <div class="mr"><span class="mn mono">02</span><strong>스캔 → 수정 PR 전환율</strong> — 발견에서 해결까지 이어지는가</div>
+    <div class="mr"><span class="mn mono">03</span><strong>취약점 발견율</strong> — 스캔이 가치를 만드는가</div>
+    <div class="mr"><span class="mn mono">04</span><strong>정기 스캔 설정 수</strong> — 자동화에 락인되는가</div>
+    <div class="mr"><span class="mn mono">05</span><strong>Free → Pro 전환율</strong> — 돈을 낼 만큼 가치를 느끼는가</div>
+  </div>
+
+  <div class="c" style="border-right:none;" data-step="8">
+    <div class="ch mono">채널</div>
+    <div class="jr">
+      <div class="js mono">발견</div>
+      <div class="jd">Product Hunt · MCP 마켓 · Reddit, HN</div>
+    </div>
+    <div class="jr">
+      <div class="js mono">체험</div>
+      <div class="jd">로그인 없이 URL → <strong>30초 결과</strong></div>
+    </div>
+    <div class="jr">
+      <div class="js mono">전환</div>
+      <div class="jd">무료 8회 → <strong>Pro 전환</strong></div>
+    </div>
+    <div class="jr">
+      <div class="js mono">확산</div>
+      <div class="jd">뱃지 + 리포트 → <strong>바이럴</strong></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ROW 3 -->
+<div class="gr g3">
+
+  <div class="c" data-step="8">
+    <div class="ch mono">비용구조</div>
+    <table class="ct mono">
+      <tr><td class="cn">인프라 고정비 (상세 하단 참조)</td><td class="cp">~$75–95/월</td></tr>
+      <tr><td class="cn">Claude Sonnet API (캐싱)</td><td class="cp">~$15–80/월</td></tr>
+      <tr><td class="cn">결제 대행사(Paddle) 수수료</td><td class="cp">5%+$0.50/건</td></tr>
+    </table>
+  </div>
+
+  <div class="c" style="border-right:none;" data-step="7">
+    <div class="ch mono">수익원</div>
+    <div class="rr">
+      <span class="rt mono">B2C</span>
+      <span class="rp mono">$9.90/월</span>
+      <span class="rd">Pro — 무제한 스캔 · AI 수정 · 자동 PR</span>
+    </div>
+    <div class="rr">
+      <span class="rt mono">B2B</span>
+      <span class="rp mono">$29/시트/월</span>
+      <span class="rd">Team (예정) — GitHub 통합</span>
+    </div>
+    <div class="rr">
+      <span class="rt mono">전환</span>
+      <span class="rd">무료 8회 → Pro → Team · 글로벌 100+개국</span>
+    </div>
+  </div>
+
+</div>
+
+<!-- ROW 4: UNIT ECONOMICS (팩트 기반) -->
+<div class="gr g4">
+
+  <!-- 고정비 & Free 유저 허용 범위 -->
+  <div class="c" data-step="8">
+    <div class="ch mono">고정비 & 허용 범위</div>
+    <div class="ue-grid">
+      <div class="ue-card">
+        <div class="ue-val green mono">~$75–95</div>
+        <div class="ue-lbl mono">월 고정비 합계</div>
+      </div>
+      <div class="ue-card">
+        <div class="ue-val mono">$0.33</div>
+        <div class="ue-lbl mono">Free 1명 비용/월</div>
+      </div>
+      <div class="ue-card">
+        <div class="ue-val green mono">~25명</div>
+        <div class="ue-lbl mono">Pro 1명이 커버</div>
+      </div>
+      <div class="ue-card">
+        <div class="ue-val mono">~90회/월</div>
+        <div class="ue-lbl mono">Free Tier 한도</div>
+      </div>
+    </div>
+    <table class="sim-tbl mono" style="margin-top:1px;border-top:1px solid var(--bb);">
+      <tr>
+        <th style="text-align:left;">고정비 내역</th>
+        <th></th>
+      </tr>
+      <tr>
+        <td>Cloud Run 서울 (4Gi·2vCPU)</td>
+        <td><strong>~$50</strong></td>
+      </tr>
+      <tr>
+        <td>Supabase Pro (DB·Auth)</td>
+        <td><strong>$25</strong></td>
+      </tr>
+      <tr>
+        <td>Vercel (프론트엔드)</td>
+        <td><strong>$0–20</strong></td>
+      </tr>
+    </table>
+    <table class="sim-tbl mono" style="margin-top:1px;border-top:1px solid var(--bb);">
+      <tr>
+        <td>Free 1명 비용</td>
+        <td>5회 × $0.065 = <strong>$0.33</strong></td>
+      </tr>
+      <tr>
+        <td>Pro 1명이 커버하는 Free 수</td>
+        <td>공헌이익 $8.25 ÷ $0.33 ≈ <strong>25명</strong></td>
+      </tr>
+      <tr>
+        <td>GCP Free Tier</td>
+        <td>180K vCPU-초/월 ≈ <strong>~90회</strong></td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- 유닛 이코노믹스 -->
+  <div class="c" style="border-right:none;" data-step="7">
+    <div class="ch mono">유닛 이코노믹스</div>
+    <div class="ue-grid">
+      <div class="ue-card">
+        <div class="ue-val mono">$0.065</div>
+        <div class="ue-lbl mono">1회 스캔 원가</div>
+      </div>
+      <div class="ue-card">
+        <div class="ue-val mono">$8.90</div>
+        <div class="ue-lbl mono">Pro 순매출/월</div>
+      </div>
+      <div class="ue-card">
+        <div class="ue-val green mono">137회</div>
+        <div class="ue-lbl mono">적자 전환 스캔 수</div>
+      </div>
+      <div class="ue-card">
+        <div class="ue-val mono">Pro 12명</div>
+        <div class="ue-lbl mono">인프라 BEP</div>
+      </div>
+    </div>
+    <table class="sim-tbl mono" style="margin-top:1px;border-top:1px solid var(--bb);">
+      <tr>
+        <th style="text-align:left;">스캔 횟수/월</th>
+        <th>변동비</th>
+        <th>공헌이익</th>
+        <th>마진</th>
+      </tr>
+      <tr>
+        <td>10회</td>
+        <td>$0.65</td>
+        <td class="acc">$8.25</td>
+        <td>93%</td>
+      </tr>
+      <tr>
+        <td>30회</td>
+        <td>$1.95</td>
+        <td class="acc">$6.95</td>
+        <td>78%</td>
+      </tr>
+      <tr>
+        <td>60회</td>
+        <td>$3.90</td>
+        <td class="acc">$5.00</td>
+        <td>56%</td>
+      </tr>
+      <tr>
+        <td>137회</td>
+        <td>$8.90</td>
+        <td>$0.00</td>
+        <td>0%</td>
+      </tr>
+    </table>
+    <table class="sim-tbl mono" style="margin-top:1px;border-top:1px solid var(--bb);">
+      <tr>
+        <td>1회 스캔 원가</td>
+        <td>Cloud Run 서울 4Gi·2vCPU (idle 포함) + Claude Sonnet (캐싱) = <strong>$0.065</strong></td>
+      </tr>
+      <tr>
+        <td>Pro 순매출</td>
+        <td>$9.90 − Paddle $1.00 = <strong>$8.90/월</strong></td>
+      </tr>
+    </table>
+  </div>
+
+</div>
+
+<div class="step-indicator mono" id="stepInfo">→ 시작</div>
+
+<script>
+const STEPS = [
+  { id: 0, label: '핵심 가치 제안' },
+  { id: 1, label: '문제' },
+  { id: 2, label: '고객군' },
+  { id: 3, label: 'UVP + 고유 가치' },
+  { id: 4, label: '솔루션' },
+  { id: 5, label: '경쟁우위' },
+  { id: 6, label: '시장' },
+  { id: 7, label: '수익원 + 유닛' },
+  { id: 8, label: '채널 + 비용 + 고정비' },
+  { id: 9, label: '마무리 (전체)' }
+];
+
+let current = -1;
+
+function go(step) {
+  if (step < -1 || step > 9) return;
+  current = step;
+
+  document.querySelectorAll('[data-step]').forEach(el => el.classList.remove('active'));
+
+  if (current >= 0 && current <= 8) {
+    document.querySelectorAll(`[data-step="${current}"]`).forEach(el => el.classList.add('active'));
+  }
+
+  const info = document.getElementById('stepInfo');
+  if (current === -1) info.textContent = '→ 시작';
+  else if (current === 9) info.textContent = '9/9 마무리';
+  else info.textContent = `${current + 1}/9 ${STEPS[current].label}`;
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight') { e.preventDefault(); go(current + 1); }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); go(current - 1); }
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,23 @@
+# Ignore Python virtual environment
+venv/
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+
+# Ignore git
+.git/
+.gitignore
+
+# Ignore IDE
+.idea/
+.vscode/
+*.swp
+
+# Ignore local env
+.env
+.env.local
+
+# Ignore test files
+*.test.py
+tests/

@@ -1,0 +1,3367 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<base href="/strategy/customer-discovery/">
+<title>Trust — Customer Discovery | E5 KAIST 2차 미션</title>
+<link rel="icon" href="data:,">
+
+<!-- Single font family: Pretendard (Korean + Latin + numbers) -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css">
+
+<style>
+/* ===========================================
+   THEME — Trust dark + cyan accent
+   =========================================== */
+:root {
+    --bg: #080b0f;
+    --bg-2: #0e1318;
+    --bg-3: #131a22;
+    --bg-hi: #0a1812;
+
+    --bd: #1a2230;
+    --bb: #243040;
+    --bb-hi: #2d3d50;
+
+    --ac: #40e8dd;
+    --ac-soft: rgba(64, 232, 221, 0.08);
+    --ac-glow: rgba(64, 232, 221, 0.3);
+
+    --warn: #ff6b6b;
+    --warn-soft: rgba(255, 107, 107, 0.08);
+    --amber: #f0b441;
+    --amber-soft: rgba(240, 180, 65, 0.10);
+    --ok: #5fd1a0;
+    --ok-soft: rgba(95, 209, 160, 0.08);
+
+    --t: #ffffff;
+    --t-md: #b8c5d4;
+    --t-dim: #7a8898;
+    --t-faint: #4a5560;
+
+    --font-body: 'Pretendard Variable', 'Pretendard', -apple-system, sans-serif;
+
+    /* TYPOGRAPHIC SCALE — single source of truth (7 tokens + mega-stat)
+       Max values raised for 1920x1080 presentation viewports
+       (previous max was capped too low and looked tiny on stage) */
+    --title-size: clamp(2.2rem, 5vw, 4.4rem);
+    --h2-size: clamp(1.75rem, 3.7vw, 3rem);
+    --h3-size: clamp(1.4rem, 2.5vw, 2.1rem);
+    --body-size: clamp(1.35rem, 2.3vw, 2.1rem);
+    --small-size: clamp(1.15rem, 1.95vw, 1.7rem);
+    --label-size: clamp(1rem, 1.55vw, 1.4rem);
+
+    /* Stat sizes — only TWO allowed for big numbers */
+    --stat-size: clamp(2.6rem, 4.2vw, 3.6rem);
+    --mega-stat-size: clamp(3.4rem, 6.8vw, 5.8rem);
+
+    --slide-padding: clamp(2rem, 4vw, 4.5rem);
+    --content-gap: clamp(0.8rem, 1.8vw, 1.6rem);
+    --element-gap: clamp(0.4rem, 1vw, 1rem);
+    --card-pad: clamp(0.85rem, 1.45vw, 1.2rem);
+
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    --duration: 0.6s;
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body { height: 100%; overflow-x: hidden; }
+html { scroll-snap-type: y mandatory; scroll-behavior: smooth; }
+
+body {
+    background: var(--bg);
+    color: var(--t);
+    font-family: var(--font-body);
+    font-feature-settings: 'tnum';
+    font-variant-numeric: tabular-nums;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    word-break: keep-all;
+    line-height: 1.5;
+}
+
+.slide {
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+    scroll-snap-align: start;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    background: var(--bg);
+}
+
+.slide-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    max-height: 100%;
+    overflow: hidden;
+    padding: var(--slide-padding);
+    position: relative;
+    z-index: 1;
+    gap: var(--content-gap);
+}
+
+@media (max-height: 800px) {
+    :root {
+        --slide-padding: clamp(1.8rem, 4vw, 4rem);
+        --content-gap: clamp(0.8rem, 1.8vw, 1.5rem);
+    }
+}
+@media (max-height: 700px) {
+    :root {
+        --slide-padding: clamp(1.4rem, 3vw, 2.4rem);
+        --content-gap: clamp(0.6rem, 1.5vw, 1.2rem);
+        --title-size: clamp(1.7rem, 3.9vw, 2.8rem);
+        --h2-size: clamp(1.4rem, 3.1vw, 2.2rem);
+        --h3-size: clamp(1.15rem, 2.1vw, 1.65rem);
+        --body-size: clamp(1.1rem, 1.85vw, 1.5rem);
+        --small-size: clamp(0.95rem, 1.55vw, 1.3rem);
+        --label-size: clamp(0.85rem, 1.25vw, 1.1rem);
+        --stat-size: clamp(1.9rem, 3vw, 2.5rem);
+        --mega-stat-size: clamp(2.5rem, 4.9vw, 3.8rem);
+        --card-pad: clamp(0.7rem, 1.3vw, 1.05rem);
+    }
+}
+@media (max-height: 600px) {
+    :root {
+        --slide-padding: clamp(0.9rem, 2vw, 1.5rem);
+        --title-size: clamp(1.3rem, 3.4vw, 2.1rem);
+        --body-size: clamp(0.85rem, 1.4vw, 1.05rem);
+        --stat-size: clamp(1.4rem, 2.4vw, 1.85rem);
+        --mega-stat-size: clamp(1.8rem, 4vw, 2.8rem);
+    }
+    .nav-dots, .kb-hint { display: none; }
+}
+@media (max-width: 700px) {
+    :root { --title-size: clamp(1.3rem, 6vw, 2.4rem); }
+}
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.2s !important;
+    }
+    html { scroll-behavior: auto; }
+}
+
+img { max-width: 100%; max-height: min(50vh, 400px); object-fit: contain; }
+
+.slide::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(255,255,255,0.012) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.012) 1px, transparent 1px);
+    background-size: 80px 80px;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity var(--duration) var(--ease-out),
+                transform var(--duration) var(--ease-out);
+}
+.slide.visible .reveal { opacity: 1; transform: translateY(0); }
+.reveal:nth-child(1) { transition-delay: 0.05s; }
+.reveal:nth-child(2) { transition-delay: 0.13s; }
+.reveal:nth-child(3) { transition-delay: 0.21s; }
+.reveal:nth-child(4) { transition-delay: 0.29s; }
+.reveal:nth-child(5) { transition-delay: 0.37s; }
+.reveal:nth-child(6) { transition-delay: 0.45s; }
+.reveal:nth-child(7) { transition-delay: 0.53s; }
+.reveal:nth-child(8) { transition-delay: 0.61s; }
+
+/* ===========================================
+   CORE TYPOGRAPHIC COMPONENTS
+   =========================================== */
+.slide-header {
+    display: flex;
+    align-items: center;
+    gap: clamp(0.8rem, 1.5vw, 1.4rem);
+    margin-bottom: clamp(0.4rem, 1vh, 0.8rem);
+}
+.slide-header .num {
+    font-size: var(--label-size);
+    font-weight: 700;
+    color: var(--ac);
+    letter-spacing: 0.1em;
+}
+.slide-header .divider-line {
+    flex: 0 0 clamp(28px, 4vw, 56px);
+    height: 2px;
+    background: var(--ac);
+}
+.slide-header .section-label {
+    font-size: var(--label-size);
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--t-dim);
+}
+
+.slide-h2 {
+    font-size: var(--title-size);
+    font-weight: 800;
+    color: var(--t);
+    line-height: 1.15;
+    letter-spacing: -0.025em;
+}
+.slide-h2 .ac { color: var(--ac); }
+
+.slide-sub {
+    font-size: var(--body-size);
+    color: var(--t-md);
+    line-height: 1.55;
+    max-width: 60ch;
+    font-weight: 400;
+}
+.slide-sub strong { color: var(--t); font-weight: 600; }
+
+.col-label {
+    font-size: var(--label-size);
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--t);
+    padding-bottom: clamp(0.4rem, 0.8vh, 0.6rem);
+    border-bottom: 2px solid var(--ac);
+    margin-bottom: clamp(0.5rem, 1vh, 0.8rem);
+}
+.col-label.warn { border-color: var(--warn); color: var(--warn); }
+
+.brand-mark {
+    position: absolute;
+    top: clamp(1.6rem, 3vh, 2.2rem);
+    right: var(--slide-padding);
+    font-size: var(--label-size);
+    font-weight: 800;
+    color: var(--t-md);
+    letter-spacing: -0.02em;
+    z-index: 5;
+}
+.brand-mark .ac { color: var(--ac); }
+
+.source {
+    font-size: var(--label-size);
+    color: var(--t-faint);
+    line-height: 1.4;
+    letter-spacing: 0.04em;
+}
+
+.ac { color: var(--ac); }
+.warn { color: var(--warn); }
+.dim { color: var(--t-dim); }
+
+/* ===========================================
+   SLIDE 1 — COVER
+   =========================================== */
+.cover {
+    background:
+        radial-gradient(ellipse at 25% 35%, rgba(64,232,221,0.10) 0%, transparent 55%),
+        radial-gradient(ellipse at 80% 80%, rgba(64,232,221,0.04) 0%, transparent 50%),
+        var(--bg);
+}
+.cover .slide-content {
+    justify-content: center;
+    gap: clamp(1.5rem, 3vh, 2.5rem);
+    padding-left: clamp(2.5rem, 7vw, 7rem);
+    padding-right: clamp(2.5rem, 7vw, 7rem);
+}
+.cover-eyebrow {
+    font-size: var(--label-size);
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ac);
+    display: flex;
+    align-items: center;
+    gap: 0.8em;
+}
+.cover-eyebrow::before {
+    content: '';
+    width: clamp(28px, 4vw, 48px);
+    height: 1px;
+    background: var(--ac);
+}
+.cover-title {
+    font-size: var(--title-size);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.035em;
+    color: var(--t);
+    max-width: 22ch;
+}
+.cover-title em {
+    font-style: normal;
+    color: var(--ac);
+    display: block;
+}
+.cover-sub {
+    font-size: var(--body-size);
+    color: var(--t-md);
+    line-height: 1.6;
+    max-width: 56ch;
+    font-weight: 400;
+}
+.cover-sub strong { color: var(--t); font-weight: 600; }
+
+.cover-meta {
+    position: absolute;
+    bottom: clamp(2rem, 4vh, 3.5rem);
+    left: clamp(2.5rem, 7vw, 7rem);
+    right: clamp(2.5rem, 7vw, 7rem);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    z-index: 2;
+    border-top: 1px solid var(--bd);
+    padding-top: clamp(1rem, 2vh, 1.5rem);
+}
+.cover-meta-block { display: flex; flex-direction: column; gap: 0.25rem; }
+.cover-meta-block .label {
+    font-size: var(--label-size);
+    color: var(--t-faint);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 500;
+}
+.cover-meta-block .value {
+    font-size: var(--small-size);
+    color: var(--t);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+}
+.cover-meta-block .sub {
+    font-size: var(--label-size);
+    color: var(--t-dim);
+    font-weight: 400;
+}
+.cover-brand {
+    font-size: var(--h3-size);
+    font-weight: 800;
+    color: var(--t);
+    letter-spacing: -0.04em;
+}
+.cover-brand .ac { color: var(--ac); }
+
+/* ===========================================
+   SLIDE 2 — STAKES
+   =========================================== */
+.stakes-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(1.5rem, 3vw, 3rem);
+    margin-top: clamp(1rem, 2vh, 1.5rem);
+}
+.stat-block {
+    border-left: 3px solid var(--warn);
+    padding-left: clamp(1.2rem, 2vw, 1.8rem);
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.5rem, 1vh, 0.8rem);
+}
+.stat-block .stat-num {
+    font-size: var(--mega-stat-size);
+    font-weight: 800;
+    color: var(--warn);
+    line-height: 0.95;
+    letter-spacing: -0.04em;
+}
+.stat-block .stat-num small {
+    font-size: 0.45em;
+    margin-left: 0.05em;
+    font-weight: 700;
+}
+.stat-block .stat-label {
+    font-size: var(--small-size);
+    color: var(--t);
+    line-height: 1.5;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+}
+.stat-block .stat-source {
+    font-size: var(--label-size);
+    color: var(--t-faint);
+    letter-spacing: 0.04em;
+    margin-top: auto;
+}
+
+.stakes-bottom {
+    margin-top: clamp(1.5rem, 3vh, 2.5rem);
+    padding-top: clamp(1rem, 1.8vh, 1.4rem);
+    border-top: 1px solid var(--bd);
+    font-size: var(--h3-size);
+    color: var(--t);
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    line-height: 1.45;
+}
+.stakes-bottom .ac { color: var(--ac); }
+
+/* ===========================================
+   SLIDE 3 — MISSION
+   =========================================== */
+.mentor-quote {
+    background: var(--bg-2);
+    border: 1px solid var(--bb);
+    border-left: 3px solid var(--ac);
+    border-radius: 4px;
+    padding: var(--card-pad) clamp(1.2rem, 2.2vw, 1.8rem);
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.4rem, 0.8vh, 0.7rem);
+}
+.mentor-quote-text {
+    font-size: var(--h3-size);
+    font-weight: 600;
+    color: var(--t);
+    line-height: 1.45;
+    letter-spacing: -0.015em;
+}
+.mentor-quote-attr {
+    font-size: var(--small-size);
+    color: var(--t-dim);
+    letter-spacing: 0.02em;
+}
+.mentor-quote-attr strong { color: var(--t-md); font-weight: 600; }
+
+.q-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: clamp(0.8rem, 1.5vw, 1.2rem);
+}
+.q-card {
+    background: var(--bg-2);
+    border: 1px solid var(--bb);
+    border-left: 2px solid var(--ac);
+    border-radius: 4px;
+    padding: var(--card-pad);
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.3rem, 0.6vh, 0.5rem);
+}
+.q-num {
+    font-size: var(--label-size);
+    color: var(--ac);
+    font-weight: 700;
+    letter-spacing: 0.14em;
+}
+.q-text {
+    font-size: var(--h3-size);
+    font-weight: 700;
+    color: var(--t);
+    line-height: 1.3;
+    letter-spacing: -0.018em;
+}
+.q-detail {
+    font-size: var(--small-size);
+    color: var(--t-dim);
+    line-height: 1.5;
+}
+
+/* ===========================================
+   SLIDE 4 — METHOD
+   =========================================== */
+.method-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: clamp(0.8rem, 1.4vw, 1.2rem);
+    flex: 1;
+    min-height: 0;
+}
+.method-card {
+    background: var(--bg-2);
+    border: 1px solid var(--bb);
+    border-radius: 4px;
+    padding: var(--card-pad);
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.4rem, 0.8vh, 0.6rem);
+    position: relative;
+    overflow: hidden;
+}
+.method-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 2px;
+    background: var(--ac);
+}
+.method-num {
+    font-size: var(--label-size);
+    color: var(--ac);
+    font-weight: 700;
+    letter-spacing: 0.14em;
+}
+.method-stat {
+    font-size: var(--stat-size);
+    font-weight: 800;
+    color: var(--t);
+    letter-spacing: -0.035em;
+    line-height: 1;
+}
+.method-stat small {
+    font-size: 0.4em;
+    color: var(--t-md);
+    margin-left: 0.15em;
+    font-weight: 600;
+}
+.method-title {
+    font-size: var(--h3-size);
+    font-weight: 700;
+    color: var(--t);
+    letter-spacing: -0.015em;
+    line-height: 1.3;
+}
+.method-bullets {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.3rem, 0.6vh, 0.5rem);
+    margin-top: auto;
+}
+.method-bullets li {
+    font-size: var(--small-size);
+    color: var(--t-md);
+    line-height: 1.5;
+    padding-left: 0.85rem;
+    position: relative;
+}
+.method-bullets li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.65em;
+    width: 5px;
+    height: 1px;
+    background: var(--ac);
+}
+
+/* ===========================================
+   SLIDE 5 — DONUTS (was 6)
+   =========================================== */
+.donut-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(1.5rem, 3vw, 3rem);
+    margin-top: clamp(1rem, 2vh, 1.5rem);
+}
+.donut-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(0.8rem, 1.5vh, 1.2rem);
+}
+.donut {
+    position: relative;
+    width: clamp(140px, 16vw, 200px);
+    height: clamp(140px, 16vw, 200px);
+}
+.donut-ring {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: conic-gradient(var(--ac) 0% var(--p), var(--bd) var(--p) 100%);
+    position: relative;
+}
+.donut-ring::after {
+    content: '';
+    position: absolute;
+    top: 9%; left: 9%;
+    width: 82%; height: 82%;
+    background: var(--bg);
+    border-radius: 50%;
+}
+.donut-val {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--stat-size);
+    font-weight: 800;
+    color: var(--ac);
+    letter-spacing: -0.04em;
+    z-index: 2;
+}
+.donut-label {
+    text-align: center;
+    font-size: var(--h3-size);
+    color: var(--t);
+    font-weight: 700;
+    line-height: 1.35;
+    letter-spacing: -0.015em;
+}
+.donut-detail {
+    text-align: center;
+    font-size: var(--small-size);
+    color: var(--t-dim);
+    margin-top: -0.4rem;
+}
+.donut-foot {
+    margin-top: clamp(1.5rem, 3vh, 2.5rem);
+    padding-top: clamp(0.8rem, 1.5vh, 1.2rem);
+    border-top: 1px solid var(--bd);
+    text-align: center;
+    font-size: var(--label-size);
+    color: var(--t-faint);
+    letter-spacing: 0.08em;
+}
+
+/* ===========================================
+   SLIDE 6 — GAP BARS (was 7)
+   =========================================== */
+.gap-viz {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(1.4rem, 3vh, 2.4rem);
+}
+.bar-row {
+    display: grid;
+    grid-template-columns: clamp(11rem, 16vw, 14rem) 1fr clamp(5rem, 7vw, 6.5rem);
+    gap: clamp(1rem, 2vw, 1.5rem);
+    align-items: center;
+}
+.bar-label {
+    font-size: var(--body-size);
+    color: var(--t);
+    font-weight: 600;
+    letter-spacing: -0.012em;
+}
+.bar-label small {
+    display: block;
+    font-size: var(--label-size);
+    color: var(--t-dim);
+    font-weight: 400;
+    margin-top: 0.2rem;
+}
+.bar-track {
+    height: clamp(36px, 5vh, 48px);
+    background: var(--bg-2);
+    border: 1px solid var(--bb);
+    border-radius: 3px;
+    position: relative;
+    overflow: hidden;
+}
+.bar-fill {
+    position: absolute;
+    top: 0; left: 0;
+    height: 100%;
+    background: linear-gradient(90deg, rgba(64,232,221,0.3), var(--ac));
+    border-right: 1px solid rgba(255,255,255,0.2);
+}
+.bar-fill.warn { background: linear-gradient(90deg, rgba(255,107,107,0.25), var(--warn)); }
+.bar-val {
+    font-size: var(--stat-size);
+    font-weight: 800;
+    color: var(--ac);
+    text-align: right;
+    letter-spacing: -0.04em;
+    line-height: 1;
+}
+.bar-val.warn { color: var(--warn); }
+
+.gap-callout {
+    margin-top: clamp(0.7rem, 1.5vh, 1.1rem);
+    padding: var(--card-pad) clamp(1.3rem, 2.5vw, 2rem);
+    border: 1px solid var(--bb);
+    border-left: 3px solid var(--ac);
+    background: var(--bg-hi);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    gap: clamp(1rem, 2vw, 1.8rem);
+}
+.gap-callout-num {
+    font-size: var(--mega-stat-size);
+    font-weight: 800;
+    color: var(--ac);
+    letter-spacing: -0.045em;
+    line-height: 0.9;
+    flex-shrink: 0;
+}
+.gap-callout-num small { font-size: 0.45em; font-weight: 700; }
+.gap-callout-text {
+    font-size: var(--h3-size);
+    color: var(--t);
+    font-weight: 600;
+    letter-spacing: -0.012em;
+    line-height: 1.4;
+}
+.gap-callout-text small {
+    display: block;
+    font-size: var(--small-size);
+    color: var(--t-dim);
+    font-weight: 400;
+    margin-top: 0.4em;
+}
+
+/* ===========================================
+   SLIDE 7 — GAUGES (was 8)
+   =========================================== */
+.gauge-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(1rem, 2vw, 1.5rem);
+}
+.gauge {
+    background: var(--bg-2);
+    border: 1px solid var(--bb);
+    border-radius: 4px;
+    padding: var(--card-pad);
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.5rem, 1vh, 0.8rem);
+    position: relative;
+    overflow: hidden;
+}
+.gauge::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 2px;
+    background: var(--ac);
+    opacity: 0.6;
+}
+.gauge-label {
+    font-size: var(--small-size);
+    color: var(--t);
+    font-weight: 600;
+    line-height: 1.4;
+    letter-spacing: -0.005em;
+}
+.gauge-bar {
+    height: clamp(10px, 1.4vh, 14px);
+    background: var(--bd);
+    border-radius: 2px;
+    overflow: hidden;
+}
+.gauge-fill {
+    height: 100%;
+    background: linear-gradient(90deg, rgba(64,232,221,0.3), var(--ac));
+}
+.gauge-foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+}
+.gauge-num {
+    font-size: var(--stat-size);
+    font-weight: 800;
+    color: var(--ac);
+    letter-spacing: -0.04em;
+    line-height: 1;
+}
+.gauge-num small { font-size: 0.45em; color: var(--t-md); margin-left: 0.1em; font-weight: 700; }
+.gauge-max {
+    font-size: var(--label-size);
+    color: var(--t-faint);
+    letter-spacing: 0.04em;
+}
+
+.aside-card {
+    padding: var(--card-pad) clamp(1.2rem, 2vw, 1.7rem);
+    background: var(--bg-hi);
+    border: 1px solid var(--bb);
+    border-left: 3px solid var(--ac);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    gap: clamp(1rem, 2vw, 1.6rem);
+}
+.aside-num {
+    font-size: var(--mega-stat-size);
+    font-weight: 800;
+    color: var(--ac);
+    letter-spacing: -0.045em;
+    line-height: 1;
+    flex-shrink: 0;
+}
+.aside-text {
+    font-size: var(--body-size);
+    color: var(--t);
+    font-weight: 500;
+    letter-spacing: -0.005em;
+    line-height: 1.55;
+}
+.aside-text strong { color: var(--ac); font-weight: 700; }
+
+/* ===========================================
+   SLIDE 8 — INTERVIEW SYNTHESIS (was 9, REFRAMED)
+   =========================================== */
+.interview-grid {
+    display: grid;
+    grid-template-columns: 1.55fr 1fr;
+    gap: clamp(1.5rem, 3vw, 2.5rem);
+    flex: 1;
+    min-height: 0;
+    align-items: stretch;
+}
+.interview-card {
+    background: var(--bg-2);
+    border: 1px solid var(--bb);
+    border-radius: 4px;
+    padding: var(--card-pad) clamp(1.2rem, 2vw, 1.6rem);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.5rem, 1vh, 0.85rem);
+    overflow: hidden;
+}
+.interview-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    bottom: 0;
+    width: 3px;
+    background: var(--ac);
+}
+.interview-id {
+    font-size: var(--label-size);
+    color: var(--ac);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 700;
+}
+.interview-title {
+    font-size: var(--h2-size);
+    font-weight: 800;
+    color: var(--t);
+    letter-spacing: -0.03em;
+    line-height: 1.15;
+}
+.interview-title small {
+    display: block;
+    font-size: 0.45em;
+    color: var(--t-md);
+    font-weight: 500;
+    margin-top: 0.4em;
+    letter-spacing: 0.02em;
+}
+/* 5 mini-cards: 3 cols on top row, 2 cols on bottom row (6-col grid trick) */
+.interview-mix {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: clamp(0.55rem, 1vw, 0.85rem);
+    margin-top: clamp(0.4rem, 0.8vh, 0.6rem);
+}
+.interview-mix li {
+    background: var(--bg);
+    border: 1px solid var(--bb);
+    border-left: 2px solid var(--ac);
+    border-radius: 4px;
+    padding: clamp(0.55rem, 1vh, 0.8rem) clamp(0.75rem, 1.3vw, 1.05rem);
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.2rem, 0.4vh, 0.35rem);
+    line-height: 1.45;
+}
+/* Top row: 3 equal-width cells */
+.interview-mix li:nth-child(1),
+.interview-mix li:nth-child(2),
+.interview-mix li:nth-child(3) { grid-column: span 2; }
+/* Bottom row: 2 cells, slightly wider */
+.interview-mix li:nth-child(4),
+.interview-mix li:nth-child(5) { grid-column: span 3; }
+
+.interview-mix li strong {
+    display: block;
+    font-size: var(--label-size);
+    color: var(--ac);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 0;
+}
+.interview-mix li {
+    font-size: var(--small-size);
+    color: var(--t-md);
+}
+.interview-stats {
+    display: flex;
+    gap: clamp(1.2rem, 2.5vw, 2rem);
+    margin-top: auto;
+    padding-top: clamp(0.8rem, 1.4vh, 1.2rem);
+    border-top: 1px dashed var(--bb);
+}
+.interview-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+}
+.interview-stat .num {
+    font-size: var(--stat-size);
+    font-weight: 800;
+    color: var(--ac);
+    letter-spacing: -0.03em;
+    line-height: 1;
+}
+.interview-stat .label {
+    font-size: var(--label-size);
+    color: var(--t-dim);
+    letter-spacing: 0.04em;
+}
+
+.interview-img-wrap {
+    border: 1px solid var(--bb);
+    border-radius: 4px;
+    overflow: hidden;
+    background: var(--bg-2);
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.interview-img-wrap::after {
+    content: '인터뷰 인사이트 종합 · N=12';
+    position: absolute;
+    bottom: 0.7rem;
+    right: 0.7rem;
+    font-size: var(--label-size);
+    color: var(--ac);
+    background: rgba(8,11,15,0.92);
+    padding: 0.35em 0.7em;
+    border-radius: 3px;
+    letter-spacing: 0.06em;
+    border: 1px solid var(--bb);
+    font-weight: 500;
+    z-index: 2;
+}
+.interview-img-wrap img {
+    width: 100%;
+    height: 100%;
+    max-height: 100%;
+    object-fit: cover;
+    object-position: 75% top;
+    background: #1a1a1a;
+}
+
+/* ===========================================
+   SLIDE 9 — 5 PERSONAS (was 10)
+   =========================================== */
+.persona-row {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: clamp(0.6rem, 1.1vw, 1rem);
+    flex: 1;
+    min-height: 0;
+}
+.persona-card {
+    background: var(--bg-2);
+    border: 1px solid var(--bb);
+    border-radius: 4px;
+    padding: var(--card-pad);
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.3rem, 0.7vh, 0.55rem);
+    position: relative;
+    overflow: hidden;
+}
+.persona-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 2px;
+    background: var(--ac);
+    opacity: 0.7;
+}
+.persona-tag {
+    font-size: var(--label-size);
+    color: var(--ac);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 700;
+}
+.persona-title {
+    font-size: var(--h3-size);
+    font-weight: 700;
+    color: var(--t);
+    letter-spacing: -0.018em;
+    line-height: 1.25;
+}
+.persona-meta {
+    font-size: var(--small-size);
+    color: var(--t-dim);
+    line-height: 1.45;
+    letter-spacing: -0.005em;
+}
+.persona-pain {
+    font-size: var(--small-size);
+    color: var(--t-md);
+    line-height: 1.55;
+    letter-spacing: -0.005em;
+}
+.persona-quote {
+    font-size: var(--small-size);
+    color: var(--t);
+    line-height: 1.5;
+    margin-top: auto;
+    padding-top: clamp(0.6rem, 1.1vh, 0.85rem);
+    border-top: 1px dashed var(--bb);
+    position: relative;
+    padding-left: 0.7em;
+    font-style: italic;
+}
+.persona-quote::before {
+    content: '"';
+    position: absolute;
+    left: 0;
+    top: 0.5em;
+    color: var(--ac);
+    font-style: normal;
+    font-weight: 800;
+    font-size: 1.4em;
+    line-height: 0.8;
+}
+
+/* ===========================================
+   SLIDES 10–13 — INSIGHTS (was 11–14)
+   =========================================== */
+.insight-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(1.2rem, 2.5vw, 2.5rem);
+    flex: 1;
+    min-height: 0;
+}
+.insight-col {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.6rem, 1.2vh, 1rem);
+    min-height: 0;
+}
+.quote-block {
+    background: var(--bg-2);
+    border: 1px solid var(--bb);
+    border-left: 3px solid var(--ac);
+    padding: var(--card-pad) clamp(1.2rem, 2.2vw, 1.8rem);
+    border-radius: 4px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.5rem, 1vh, 0.8rem);
+    flex: 0 0 auto;
+    align-self: stretch;
+    min-height: 0;
+}
+.quote-mark {
+    font-size: var(--mega-stat-size);
+    color: var(--ac);
+    line-height: 0.6;
+    opacity: 0.4;
+    font-weight: 800;
+}
+.quote-text {
+    font-size: var(--h3-size);
+    color: var(--t);
+    line-height: 1.5;
+    font-weight: 500;
+    letter-spacing: -0.015em;
+    flex: 0 0 auto;
+}
+.quote-text strong { color: var(--ac); font-weight: 700; }
+.quote-source {
+    font-size: var(--label-size);
+    color: var(--t-faint);
+    letter-spacing: 0.04em;
+    border-top: 1px dashed var(--bb);
+    padding-top: clamp(0.6rem, 1vh, 0.8rem);
+    margin-top: auto;
+}
+
+.applied-card {
+    background: var(--bg-hi);
+    border: 1px solid var(--bb);
+    border-radius: 4px;
+    padding: var(--card-pad) clamp(1.2rem, 2.2vw, 1.8rem);
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.5rem, 1vh, 0.85rem);
+    flex: 1;
+    min-height: 0;
+}
+.applied-title {
+    font-size: var(--h3-size);
+    font-weight: 700;
+    color: var(--ac);
+    letter-spacing: -0.015em;
+    line-height: 1.35;
+}
+.applied-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.5rem, 1vh, 0.8rem);
+}
+.applied-list li {
+    font-size: var(--small-size);
+    color: var(--t-md);
+    padding-left: 1.2rem;
+    position: relative;
+    line-height: 1.55;
+}
+.applied-list li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--ac);
+    font-weight: 700;
+    top: 0;
+}
+.applied-list li strong { color: var(--t); font-weight: 600; }
+
+/* Applied widgets — 5 mini-cards instead of bullet list */
+.applied-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: clamp(0.5rem, 0.95vh, 0.75rem) clamp(0.6rem, 1.2vw, 1rem);
+    flex: 1;
+    min-height: 0;
+}
+.applied-grid > .applied-mini:nth-child(-n+3) { grid-column: span 2; }
+.applied-grid > .applied-mini:nth-child(n+4) { grid-column: span 3; }
+.applied-mini {
+    background: var(--bg-2);
+    border: 1px solid var(--bb);
+    border-left: 2px solid var(--ac);
+    border-radius: 4px;
+    padding: clamp(0.6rem, 1.05vh, 0.85rem) clamp(0.95rem, 1.55vw, 1.3rem);
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.25rem, 0.5vh, 0.4rem);
+    align-items: stretch;
+}
+.applied-mini-head {
+    font-size: var(--small-size);
+    font-weight: 700;
+    color: var(--ac);
+    letter-spacing: -0.012em;
+    line-height: 1.3;
+}
+.applied-mini-body {
+    font-size: var(--small-size);
+    color: var(--t-md);
+    line-height: 1.5;
+    letter-spacing: -0.005em;
+}
+.applied-mini-body strong { color: var(--t); font-weight: 600; }
+.applied-mini.note {
+    border-left-color: var(--ok);
+    background: var(--ac-soft);
+    text-align: center;
+    justify-content: center;
+}
+.applied-mini.note .applied-mini-body {
+    color: var(--t);
+    font-weight: 700;
+    font-size: var(--h3-size);
+    line-height: 1.35;
+    letter-spacing: -0.015em;
+}
+
+.reg-timeline {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.7rem, 1.3vh, 1rem);
+    flex: 1;
+    justify-content: flex-start;
+}
+.reg-item {
+    display: grid;
+    grid-template-columns: clamp(8.5rem, 12vw, 10.5rem) 1fr;
+    gap: clamp(3.5rem, 6vw, 5.5rem);
+    padding: clamp(0.85rem, 1.5vh, 1.2rem) 0;
+    border-bottom: 1px dashed var(--bb);
+    align-items: center;
+}
+.reg-item:last-child { border-bottom: none; }
+.reg-date {
+    font-size: var(--body-size);
+    font-weight: 800;
+    color: var(--ac);
+    letter-spacing: 0.02em;
+    line-height: 1.15;
+}
+.reg-name {
+    font-size: var(--body-size);
+    font-weight: 700;
+    color: var(--t);
+    letter-spacing: -0.015em;
+    margin-bottom: 0.35rem;
+    line-height: 1.25;
+}
+.reg-detail {
+    font-size: var(--small-size);
+    color: var(--t-md);
+    line-height: 1.5;
+}
+.reg-detail strong { color: var(--warn); font-weight: 700; }
+
+.moat-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: clamp(0.85rem, 1.5vw, 1.25rem);
+    flex: 1;
+}
+.moat-card {
+    background: var(--bg-2);
+    border: 1px solid var(--bb);
+    border-left: 2px solid var(--ac);
+    padding: clamp(1rem, 1.8vw, 1.45rem);
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    justify-content: center;
+}
+.moat-num {
+    font-size: var(--label-size);
+    color: var(--ac);
+    letter-spacing: 0.16em;
+    font-weight: 700;
+}
+.moat-title {
+    font-size: var(--h3-size);
+    font-weight: 700;
+    color: var(--t);
+    letter-spacing: -0.015em;
+    line-height: 1.25;
+}
+.moat-detail {
+    font-size: var(--small-size);
+    color: var(--t-md);
+    line-height: 1.5;
+}
+
+/* ===========================================
+   SLIDE 14 — HYPOTHESIS BOARD (was 15)
+   =========================================== */
+.hyp-table {
+    border: 1px solid var(--bb);
+    border-radius: 4px;
+    overflow: hidden;
+}
+.hyp-row {
+    display: grid;
+    grid-template-columns: clamp(4rem, 6vw, 5rem) 1.6fr clamp(7.5rem, 11vw, 10rem) 1.4fr;
+    align-items: stretch;
+    border-bottom: 1px solid var(--bd);
+    background: var(--bg-2);
+}
+.hyp-row:last-child { border-bottom: none; }
+.hyp-row.passed { border-left: 3px solid var(--ac); }
+.hyp-row.warn { border-left: 3px solid var(--amber); }
+.hyp-row.failed { border-left: 3px solid var(--warn); }
+
+.hyp-id {
+    font-size: var(--h3-size);
+    font-weight: 800;
+    color: var(--ac);
+    text-align: center;
+    letter-spacing: 0.02em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.hyp-row.warn .hyp-id { color: var(--amber); }
+.hyp-row.failed .hyp-id { color: var(--warn); }
+
+.hyp-text {
+    font-size: var(--small-size);
+    color: var(--t);
+    font-weight: 600;
+    padding: clamp(1rem, 1.6vh, 1.4rem) clamp(1rem, 1.8vw, 1.4rem);
+    letter-spacing: -0.01em;
+    line-height: 1.4;
+    display: flex;
+    align-items: center;
+}
+
+.hyp-status {
+    font-size: var(--label-size);
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    text-transform: uppercase;
+    border-left: 1px solid var(--bd);
+    border-right: 1px solid var(--bd);
+}
+.hyp-status.passed { color: var(--ac); }
+.hyp-status.warn { color: var(--amber); }
+.hyp-status.failed { color: var(--warn); }
+.hyp-status .icon {
+    font-size: clamp(0.85rem, 1.25vw, 1.05rem);
+    width: clamp(1.6rem, 2.4vw, 2.1rem);
+    height: clamp(1.6rem, 2.4vw, 2.1rem);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1.5px solid currentColor;
+    border-radius: 50%;
+    font-weight: 700;
+    flex-shrink: 0;
+    line-height: 1;
+    aspect-ratio: 1 / 1;
+}
+
+.hyp-evidence {
+    font-size: var(--label-size);
+    color: var(--t-md);
+    padding: clamp(0.9rem, 1.5vh, 1.2rem) clamp(1rem, 1.8vw, 1.4rem);
+    line-height: 1.5;
+    display: flex;
+    align-items: center;
+}
+.hyp-evidence strong { color: var(--t); font-weight: 600; }
+
+.hyp-foot {
+    font-size: var(--label-size);
+    color: var(--t-faint);
+    letter-spacing: 0.06em;
+    text-align: right;
+}
+
+/* ===========================================
+   SLIDE 15 — CHANGES DETAIL (3-col: trigger / tech / outcome)
+   EXPANDED with technical depth + expected impact
+   =========================================== */
+.changes-deep-list {
+    counter-reset: change-counter;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.5rem, 0.9vh, 0.75rem);
+    flex: 1;
+    min-height: 0;
+}
+/* Step badge on each change item — gives the list a visible flow */
+.change-deep-item::after {
+    content: 'STEP ' counter(change-counter, decimal-leading-zero);
+    counter-increment: change-counter;
+    position: absolute;
+    top: -0.65em;
+    left: clamp(1rem, 1.6vw, 1.4rem);
+    background: var(--bg);
+    color: var(--ac);
+    font-size: clamp(0.62rem, 0.85vw, 0.78rem);
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    padding: 0.15em 0.6em;
+    border: 1px solid var(--bb);
+    border-radius: 3px;
+    z-index: 3;
+    line-height: 1;
+}
+/* Connector arrow between adjacent change items */
+.change-deep-item:not(:last-child) {
+    --connector-arrow: '↓';
+}
+.change-deep-item:not(:last-child)::before {
+    content: '↓';
+    position: absolute;
+    bottom: calc(-1 * clamp(0.7rem, 1.4vh, 1.1rem) + 0.3em);
+    left: 50%;
+    transform: translateX(-50%);
+    color: var(--ac);
+    opacity: 0.55;
+    font-size: clamp(0.85rem, 1.3vw, 1.1rem);
+    font-weight: 600;
+    background: var(--bg);
+    padding: 0 0.5em;
+    z-index: 3;
+    line-height: 1;
+}
+.change-deep-item {
+    background: var(--bg-2);
+    border: 1px solid var(--bb);
+    border-left: 2px solid var(--ac);
+    border-radius: 4px;
+    padding: 12px 22px;
+    min-height: unset;
+    display: grid;
+    grid-template-columns: 0.85fr 1.4fr 1.15fr;
+    gap: clamp(0.9rem, 1.7vw, 1.4rem);
+    align-items: stretch;
+}
+.change-deep-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    justify-content: center;
+}
+.change-deep-cell .label {
+    font-size: var(--label-size);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    font-weight: 700;
+}
+.change-deep-cell .body {
+    font-size: var(--small-size);
+    line-height: 1.5;
+    letter-spacing: -0.005em;
+}
+.change-deep-cell.trigger .label { color: var(--t-faint); }
+.change-deep-cell.trigger .body { color: var(--t-md); }
+.change-deep-cell.tech .label { color: var(--ac); }
+.change-deep-cell.tech .body { color: var(--t); font-weight: 600; }
+.change-deep-cell.outcome .label { color: var(--ok); }
+.change-deep-cell.outcome .body { color: var(--t-md); }
+.change-deep-cell.outcome .body strong { color: var(--ok); font-weight: 600; }
+
+/* ===========================================
+   SLIDE 16 — GTM ACTION PLAN (NEW)
+   =========================================== */
+.gtm-grid {
+    display: grid;
+    grid-template-columns: 1fr 0.78fr;
+    gap: clamp(1.5rem, 3vw, 2.5rem);
+    flex: 0 0 auto;
+    min-height: 0;
+    align-items: start;
+}
+.gtm-timeline {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.3rem, 0.55vh, 0.5rem);
+    min-height: 0;
+}
+.gtm-step {
+    background: var(--bg-2);
+    border: 1px solid var(--bb);
+    border-left: 2px solid var(--bb);
+    border-radius: 4px;
+    padding: clamp(0.4rem, 0.75vw, 0.6rem) clamp(0.95rem, 1.7vw, 1.4rem);
+    display: grid;
+    grid-template-columns: clamp(7rem, 10vw, 8.5rem) clamp(4rem, 5.5vw, 5rem) 1fr;
+    gap: clamp(0.85rem, 1.5vw, 1.25rem);
+    align-items: center;
+}
+.gtm-step.done { border-left-color: var(--ac); background: var(--ac-soft); }
+.gtm-step.now { border-left-color: var(--ac); background: var(--bg-hi); }
+.gtm-step.plan { border-left-color: var(--bb-hi); }
+
+.gtm-step-when {
+    font-size: var(--small-size);
+    color: var(--ac);
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    line-height: 1.6;
+    white-space: nowrap;
+}
+.gtm-step.plan .gtm-step-when { color: var(--t-dim); }
+
+.gtm-step-status {
+    font-size: var(--label-size);
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    text-align: center;
+    line-height: 1.2;
+}
+.gtm-step.done .gtm-step-status { color: var(--ac); }
+.gtm-step.now .gtm-step-status { color: var(--ac); }
+.gtm-step.plan .gtm-step-status { color: var(--t-faint); }
+
+.gtm-step-text {
+    font-size: var(--small-size);
+    color: var(--t);
+    line-height: 1.5;
+    letter-spacing: -0.005em;
+}
+.gtm-step-text strong { color: var(--ac); font-weight: 700; }
+.gtm-step.plan .gtm-step-text { color: var(--t-md); }
+.gtm-step.plan .gtm-step-text strong { color: var(--t); font-weight: 600; }
+
+.gtm-evidence {
+    border: 1px solid var(--bb);
+    border-radius: 4px;
+    overflow: hidden;
+    background: var(--bg-2);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+.gtm-evidence::after {
+    content: 'PHASE 0 · 2026.05.01 · LIVE';
+    position: absolute;
+    top: 0.7rem;
+    right: 0.7rem;
+    font-size: var(--label-size);
+    color: var(--ac);
+    background: rgba(8,11,15,0.88);
+    padding: 0.35em 0.7em;
+    border-radius: 3px;
+    letter-spacing: 0.08em;
+    border: 1px solid var(--bb);
+    font-weight: 700;
+    z-index: 2;
+}
+.gtm-evidence img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    flex: 1;
+}
+
+.gtm-closing {
+    margin-top: clamp(0.8rem, 1.6vh, 1.2rem);
+    padding-top: clamp(0.9rem, 1.6vh, 1.3rem);
+    border-top: 1px solid var(--bb);
+    font-size: var(--h3-size);
+    font-weight: 600;
+    color: var(--t);
+    letter-spacing: -0.02em;
+    line-height: 1.4;
+    text-align: center;
+    flex-shrink: 0;
+}
+.gtm-closing .ac { color: var(--ac); }
+
+/* ===========================================
+   SHARED INFOGRAPHIC COMPONENTS
+   flow arrows · funnel · process steps · mini-evidence
+   =========================================== */
+
+/* Down-arrow connector between blocks */
+.flow-arrow-down {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(0.5rem, 1vw, 0.9rem);
+    margin: clamp(0.4rem, 0.9vh, 0.7rem) 0;
+    color: var(--ac);
+    opacity: 0.85;
+}
+.flow-arrow-down .line {
+    flex: 0 0 clamp(40px, 6vw, 80px);
+    height: 1px;
+    background: var(--ac);
+    opacity: 0.45;
+}
+.flow-arrow-down .glyph {
+    font-size: var(--small-size);
+    font-weight: 800;
+    letter-spacing: 0.18em;
+    color: var(--ac);
+    text-transform: uppercase;
+}
+.flow-arrow-down .chevron {
+    width: 0; height: 0;
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
+    border-top: 9px solid var(--ac);
+    opacity: 0.85;
+}
+
+/* Resulting takeaway band */
+.takeaway-band {
+    display: flex;
+    align-items: center;
+    gap: clamp(0.9rem, 1.8vw, 1.5rem);
+    padding: clamp(1.1rem, 2.1vh, 1.7rem) clamp(1.1rem, 2.1vw, 1.8rem);
+    background: var(--ac-soft);
+    border: 1px solid rgba(64, 232, 221, 0.25);
+    border-left: 3px solid var(--ac);
+    border-radius: 4px;
+    font-size: clamp(1.3rem, 2.2vw, 1.95rem);
+    color: var(--t);
+    line-height: 1.55;
+    font-weight: 500;
+}
+.takeaway-band .lead {
+    color: var(--ac);
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-size: clamp(1.05rem, 1.7vw, 1.5rem);
+    flex-shrink: 0;
+    border-right: 1px solid rgba(64, 232, 221, 0.3);
+    padding-right: clamp(0.9rem, 1.8vw, 1.5rem);
+}
+.takeaway-band strong { color: var(--ac); font-weight: 700; }
+
+/* Funnel — 4 inputs converging to result */
+.funnel {
+    display: grid;
+    grid-template-columns: 1fr clamp(80px, 8vw, 120px) clamp(180px, 18vw, 240px);
+    gap: clamp(0.8rem, 1.5vw, 1.4rem);
+    align-items: stretch;
+    flex: 1;
+    min-height: 0;
+}
+.funnel-inputs {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.4rem, 0.8vh, 0.7rem);
+}
+.funnel-converge {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.funnel-converge::before {
+    content: '';
+    position: absolute;
+    inset: 10% 0;
+    background:
+        linear-gradient(to right, rgba(64,232,221,0.0), rgba(64,232,221,0.18) 60%, rgba(64,232,221,0.0));
+    clip-path: polygon(0 0, 100% 35%, 100% 65%, 0 100%);
+}
+.funnel-converge .arrow {
+    position: relative;
+    z-index: 2;
+    color: var(--ac);
+    font-size: var(--h2-size);
+    font-weight: 300;
+    letter-spacing: -0.05em;
+}
+.funnel-result {
+    background: var(--bg-hi);
+    border: 1px solid var(--bb);
+    border-left: 3px solid var(--ac);
+    border-radius: 4px;
+    padding: var(--card-pad);
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.4rem, 0.8vh, 0.7rem);
+    justify-content: center;
+}
+.funnel-result-label {
+    font-size: var(--label-size);
+    color: var(--ac);
+    letter-spacing: 0.16em;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+.funnel-result-text {
+    font-size: var(--small-size);
+    color: var(--t);
+    font-weight: 600;
+    line-height: 1.4;
+    letter-spacing: -0.012em;
+}
+.funnel-result-text strong { color: var(--ac); }
+
+/* Mini evidence thumbnail (in-card) — sized to show meaningful content */
+.mini-evidence {
+    border: 1px solid var(--bb);
+    border-radius: 3px;
+    overflow: hidden;
+    background: #1a1a1a;
+    height: clamp(160px, 22vh, 250px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: auto;
+    position: relative;
+    flex-shrink: 0;
+}
+.mini-evidence::after {
+    content: 'EVIDENCE';
+    position: absolute;
+    top: 0.4rem;
+    left: 0.45rem;
+    font-size: 0.7rem;
+    color: var(--ac);
+    background: rgba(8,11,15,0.88);
+    padding: 0.2em 0.55em;
+    border-radius: 2px;
+    letter-spacing: 0.14em;
+    font-weight: 700;
+    border: 1px solid var(--bb);
+    z-index: 2;
+}
+.mini-evidence img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center center;
+    display: block;
+    filter: saturate(0.92);
+    padding: 4px;
+}
+.mini-evidence.quote {
+    background: var(--bg-2);
+    padding: clamp(1rem, 1.6vw, 1.4rem);
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 0.6rem;
+    text-align: left;
+}
+.mini-evidence.quote .quote-text {
+    font-size: var(--small-size);
+    font-weight: 600;
+    color: var(--t);
+    line-height: 1.45;
+    letter-spacing: -0.01em;
+}
+.mini-evidence.quote .quote-source {
+    font-size: var(--label-size);
+    color: var(--ac);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+}
+
+/* Process step (3-stage horizontal flow inside a card) */
+.process-row {
+    display: grid;
+    grid-template-columns: 1fr clamp(20px, 2.5vw, 36px) 1fr clamp(20px, 2.5vw, 36px) 1fr;
+    gap: clamp(0.4rem, 0.8vw, 0.7rem);
+    align-items: stretch;
+    flex: 1;
+    min-height: 0;
+}
+.process-step {
+    background: var(--bg-2);
+    border: 1px solid var(--bb);
+    border-radius: 4px;
+    padding: var(--card-pad);
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.4rem, 0.8vh, 0.7rem);
+    position: relative;
+}
+.process-step.stage-a { border-left: 3px solid var(--warn); }
+.process-step.stage-b { border-left: 3px solid var(--amber); }
+.process-step.stage-c { border-left: 3px solid var(--ac); }
+.process-step .stage-tag {
+    font-size: var(--label-size);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 700;
+}
+.process-step.stage-a .stage-tag { color: var(--warn); }
+.process-step.stage-b .stage-tag { color: var(--amber); }
+.process-step.stage-c .stage-tag { color: var(--ac); }
+.process-step .stage-title {
+    font-size: var(--h3-size);
+    font-weight: 700;
+    color: var(--t);
+    line-height: 1.25;
+    letter-spacing: -0.018em;
+}
+.process-step .stage-body {
+    font-size: var(--small-size);
+    color: var(--t-md);
+    line-height: 1.5;
+}
+.process-step .stage-body strong { color: var(--t); font-weight: 600; }
+.process-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ac);
+    font-size: var(--h2-size);
+    font-weight: 300;
+    opacity: 0.7;
+    line-height: 1;
+}
+
+/* Stakes converge bar */
+.stakes-converge {
+    display: flex;
+    align-items: center;
+    gap: clamp(0.6rem, 1.2vw, 1rem);
+    margin-top: clamp(0.5rem, 1vh, 0.9rem);
+}
+.stakes-converge-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--warn), var(--ac), transparent);
+    position: relative;
+}
+.stakes-converge-line::before,
+.stakes-converge-line::after {
+    content: '';
+    position: absolute;
+    top: -3px;
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--warn);
+}
+.stakes-converge-line::before { left: 8%; }
+.stakes-converge-line::after { left: 50%; background: var(--warn); }
+.stakes-converge-anchor {
+    width: 0; height: 0;
+    border-left: 9px solid var(--ac);
+    border-top: 6px solid transparent;
+    border-bottom: 6px solid transparent;
+}
+
+/* Insight slides (10–13): stacked vertical — STEP 01 on top, STEP 02 below */
+.insight-grid.with-flow {
+    display: flex;
+    flex-direction: column;
+    grid-template-columns: none;
+    gap: clamp(2rem, 4vh, 3.2rem);
+}
+.insight-grid.with-flow .insight-col {
+    min-height: 0;
+}
+.insight-arrow {
+    display: none;
+}
+
+/* Slide-bottom flow hint (connective tissue) */
+.slide-flow-hint {
+    position: absolute;
+    bottom: clamp(0.6rem, 1.2vh, 1rem);
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: var(--label-size);
+    color: var(--t-faint);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 600;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    gap: 0.6em;
+    opacity: 0.65;
+    white-space: nowrap;
+    pointer-events: none;
+}
+.slide-flow-hint .arr {
+    color: var(--ac);
+    font-weight: 800;
+}
+/* Slide that contains a flow hint — leave bottom room */
+.slide:has(.slide-flow-hint) .slide-content {
+    padding-bottom: clamp(2.4rem, 4vh, 3.2rem);
+}
+
+/* Slide 7 — content is small, anchor to top to remove vertical voids */
+.slide[data-slide="7"] .slide-content {
+    justify-content: flex-start;
+    gap: clamp(1.2rem, 2.8vh, 2.2rem);
+}
+
+/* Slide 17 — compress to fit 1080 with closing line below grid */
+.slide[data-slide="16"] .slide-sub {
+    font-size: var(--small-size);
+    line-height: 1.45;
+    max-width: 80ch;
+}
+.slide[data-slide="16"] .gtm-step-text {
+    font-size: var(--label-size);
+    line-height: 1.4;
+}
+.slide[data-slide="16"] .gtm-step-when {
+    font-size: var(--label-size);
+}
+
+/* GAP red zone visualisation (slide 6) */
+.gap-zone {
+    margin-top: clamp(0.6rem, 1.3vh, 1rem);
+    padding: clamp(0.6rem, 1.2vh, 0.95rem) clamp(0.9rem, 1.7vw, 1.4rem);
+    border: 1px dashed var(--warn);
+    border-radius: 3px;
+    background: rgba(255, 107, 107, 0.06);
+    display: flex;
+    align-items: center;
+    gap: clamp(0.7rem, 1.3vw, 1.1rem);
+}
+.gap-zone-bar {
+    flex: 1;
+    height: clamp(14px, 2vh, 20px);
+    position: relative;
+    background: var(--bg-2);
+    border: 1px solid var(--bb);
+    border-radius: 2px;
+    overflow: hidden;
+}
+.gap-zone-bar::before {
+    content: '';
+    position: absolute;
+    left: 33%;
+    width: 42%;
+    top: 0; bottom: 0;
+    background: repeating-linear-gradient(
+        45deg,
+        rgba(255,107,107,0.45),
+        rgba(255,107,107,0.45) 6px,
+        rgba(255,107,107,0.18) 6px,
+        rgba(255,107,107,0.18) 12px
+    );
+}
+.gap-zone-bar::after {
+    content: '';
+    position: absolute;
+    left: 33%; right: 25%;
+    top: 0; bottom: 0;
+    border-left: 2px solid var(--ac);
+    border-right: 2px solid var(--warn);
+}
+.gap-zone-label {
+    font-size: var(--label-size);
+    color: var(--warn);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    flex-shrink: 0;
+}
+
+/* Synthesis funnel for Slide 8 */
+.synth-grid {
+    display: grid;
+    grid-template-columns: 1fr clamp(70px, 7vw, 110px) 1fr;
+    gap: clamp(0.8rem, 1.5vw, 1.3rem);
+    flex: 1;
+    min-height: 0;
+}
+.synth-input, .synth-output {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.5rem, 1vh, 0.8rem);
+    min-height: 0;
+}
+.synth-output-card {
+    background: var(--bg-hi);
+    border: 1px solid var(--bb);
+    border-left: 3px solid var(--ac);
+    border-radius: 4px;
+    padding: var(--card-pad);
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.4rem, 0.8vh, 0.7rem);
+    flex: 1;
+    min-height: 0;
+}
+.synth-output-tag {
+    font-size: var(--label-size);
+    color: var(--ac);
+    letter-spacing: 0.16em;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+.synth-output-num {
+    font-size: var(--mega-stat-size);
+    font-weight: 800;
+    color: var(--ac);
+    letter-spacing: -0.04em;
+    line-height: 1;
+}
+.synth-output-text {
+    font-size: var(--small-size);
+    color: var(--t-md);
+    line-height: 1.5;
+}
+.synth-output-text strong { color: var(--t); font-weight: 600; }
+.synth-converge {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ac);
+}
+.synth-converge::before {
+    content: '';
+    position: absolute;
+    inset: 12% 0;
+    background: linear-gradient(to right, rgba(64,232,221,0.0), rgba(64,232,221,0.15) 60%, rgba(64,232,221,0.0));
+    clip-path: polygon(0 0, 100% 30%, 100% 70%, 0 100%);
+}
+.synth-converge .arrow {
+    position: relative;
+    z-index: 2;
+    font-size: var(--h2-size);
+    font-weight: 300;
+    color: var(--ac);
+}
+
+/* Persona evidence (Slide 9) */
+.persona-evidence {
+    margin-top: clamp(0.5rem, 1vh, 0.8rem);
+    display: grid;
+    grid-template-columns: clamp(340px, 33vw, 460px) 1fr;
+    gap: clamp(1rem, 2vw, 1.6rem);
+    align-items: stretch;
+    border-top: 1px solid var(--bd);
+    padding-top: clamp(0.7rem, 1.4vh, 1.05rem);
+}
+.persona-evidence-img {
+    border: 1px solid var(--bb);
+    border-radius: 4px;
+    overflow: hidden;
+    background: #1a1a1a;
+    height: clamp(180px, 23vh, 280px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+.persona-evidence-img::after {
+    content: '5 페르소나 정의';
+    position: absolute;
+    top: 0.5rem;
+    left: 0.55rem;
+    font-size: var(--label-size);
+    color: var(--ac);
+    background: rgba(8,11,15,0.85);
+    padding: 0.25em 0.6em;
+    border-radius: 3px;
+    letter-spacing: 0.08em;
+    border: 1px solid var(--bb);
+    font-weight: 700;
+    z-index: 2;
+}
+.persona-evidence-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+    display: block;
+    padding: 6px;
+}
+.persona-evidence-text {
+    font-size: var(--body-size);
+    color: var(--t-md);
+    line-height: 1.55;
+    display: flex;
+    align-items: center;
+}
+.persona-evidence-text strong { color: var(--ac); }
+
+/* Hypothesis next-flow */
+.hyp-next {
+    margin-top: clamp(0.6rem, 1.2vh, 1rem);
+    display: flex;
+    align-items: center;
+    gap: clamp(0.8rem, 1.6vw, 1.4rem);
+    padding: clamp(0.7rem, 1.4vh, 1.1rem) clamp(1rem, 2vw, 1.6rem);
+    background: var(--ac-soft);
+    border: 1px solid rgba(64, 232, 221, 0.25);
+    border-radius: 4px;
+}
+.hyp-next-tag {
+    font-size: var(--label-size);
+    color: var(--ac);
+    letter-spacing: 0.18em;
+    font-weight: 800;
+    text-transform: uppercase;
+    flex-shrink: 0;
+}
+.hyp-next-text {
+    font-size: var(--small-size);
+    color: var(--t);
+    line-height: 1.5;
+    font-weight: 500;
+    flex: 1;
+}
+.hyp-next-text strong { color: var(--ac); font-weight: 700; }
+.hyp-next-arrow {
+    color: var(--ac);
+    font-size: var(--h3-size);
+    font-weight: 300;
+    flex-shrink: 0;
+}
+
+/* Changes-deep arrow injection */
+.change-deep-item {
+    position: relative;
+}
+.change-deep-cell.tech::before,
+.change-deep-cell.outcome::before {
+    content: '→';
+    position: absolute;
+    color: var(--ac);
+    font-weight: 300;
+    font-size: var(--h3-size);
+    line-height: 1;
+    left: calc(-1 * clamp(0.55rem, 1vw, 0.85rem));
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+/* GTM evidence: contain not cover for Product Hunt screenshot */
+.gtm-evidence-contain img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain !important;
+    background: #0a0a0a;
+    padding: clamp(0.5rem, 1vw, 0.9rem);
+}
+
+/* Slide 15 — Interview-derived flow (5 horizontal rows) */
+.changes-flow-list {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.55rem, 1.1vh, 0.9rem);
+    flex: 1;
+    min-height: 0;
+    margin-top: clamp(0.8rem, 1.6vh, 1.2rem);
+}
+.changes-flow-row {
+    background: var(--bg-2);
+    border: 1px solid var(--bb);
+    border-left: 3px solid var(--ac);
+    border-radius: 4px;
+    padding: clamp(1.1rem, 2vw, 1.6rem) clamp(1rem, 1.7vw, 1.3rem);
+    display: grid;
+    grid-template-columns: clamp(2.4rem, 3.2vw, 3rem) 1fr clamp(1.6rem, 2.2vw, 2rem) 1.4fr 1.2fr;
+    gap: clamp(0.8rem, 1.5vw, 1.2rem);
+    align-items: center;
+    flex: 1;
+    min-height: 0;
+}
+.cf-num {
+    font-size: clamp(1.4rem, 2.3vw, 1.9rem);
+    font-weight: 800;
+    color: var(--ac);
+    letter-spacing: 0.04em;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+}
+.cf-trigger { font-size: var(--small-size); color: var(--t-md); line-height: 1.4; }
+.cf-arrow {
+    font-size: clamp(1.5rem, 2.4vw, 2rem);
+    color: var(--ac);
+    text-align: center;
+    opacity: 0.85;
+    font-weight: 600;
+    line-height: 1;
+}
+.cf-tech { font-size: var(--small-size); color: var(--t); font-weight: 600; line-height: 1.4; }
+.cf-outcome { font-size: var(--small-size); color: var(--ok); font-weight: 500; line-height: 1.4; }
+
+/* Slide 16 — Day-5 PH data (stat strip + 2x2 cards) */
+.day5-stat-strip {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr;
+    gap: clamp(0.6rem, 1.2vw, 1rem);
+    align-items: center;
+    background: var(--bg-2);
+    border: 1px solid var(--bb);
+    border-radius: 4px;
+    padding: clamp(0.95rem, 1.8vh, 1.3rem) clamp(0.8rem, 1.4vw, 1.1rem);
+    margin: clamp(0.8rem, 1.6vh, 1.2rem) 0 clamp(0.85rem, 1.6vh, 1.2rem);
+}
+.d5s-cell { text-align: center; display: flex; flex-direction: column; gap: 0.3rem; }
+.d5s-num {
+    font-size: clamp(1.8rem, 3.4vw, 2.7rem);
+    font-weight: 800;
+    color: var(--t);
+    letter-spacing: -0.03em;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+}
+.d5s-cell.highlight .d5s-num { color: var(--ac); }
+.d5s-unit { font-size: 0.55em; font-weight: 600; color: var(--t-md); margin-left: 0.05em; }
+.d5s-label {
+    font-size: var(--label-size);
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--t-faint);
+    font-weight: 700;
+}
+.d5s-arrow { color: var(--ac); font-size: clamp(1rem, 1.6vw, 1.4rem); opacity: 0.5; font-weight: 300; }
+
+.day5-changes-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(0.6rem, 1.2vw, 1rem);
+    flex: 1;
+    min-height: 0;
+}
+.day5-card {
+    background: var(--bg-2);
+    border: 1px solid var(--bb);
+    border-left: 2px solid var(--ac);
+    border-radius: 4px;
+    padding: clamp(0.75rem, 1.4vw, 1.05rem) clamp(0.95rem, 1.7vw, 1.25rem);
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.35rem, 0.7vh, 0.55rem);
+}
+.d5c-tag {
+    font-size: var(--label-size);
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--ac);
+    font-weight: 800;
+}
+.d5c-bad { font-size: var(--small-size); color: var(--t-md); line-height: 1.4; }
+.d5c-good { font-size: var(--small-size); color: var(--t); font-weight: 600; line-height: 1.4; }
+.d5c-effect {
+    font-size: var(--small-size);
+    color: var(--ok);
+    font-weight: 500;
+    line-height: 1.4;
+    margin-top: auto;
+    padding-top: clamp(0.3rem, 0.6vh, 0.45rem);
+    border-top: 1px dashed var(--bb);
+}
+
+/* Slide 15 — combined apply / launch / measure layout (compress to fit) */
+.s15-section-label {
+    font-size: var(--label-size);
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    font-weight: 800;
+    color: var(--ac);
+    margin-bottom: clamp(0.4rem, 0.8vh, 0.6rem);
+}
+.s15-apply-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(0.6rem, 1.2vw, 1rem);
+}
+.slide[data-slide="15"] .day5-stat-strip {
+    padding: clamp(0.65rem, 1.2vh, 0.95rem) clamp(0.7rem, 1.3vw, 1rem);
+    margin: 0;
+}
+.slide[data-slide="15"] .d5s-num {
+    font-size: clamp(1.4rem, 2.6vw, 2rem);
+}
+.slide[data-slide="15"] .day5-card {
+    padding: clamp(0.55rem, 1.05vw, 0.85rem) clamp(0.8rem, 1.45vw, 1.1rem);
+    gap: clamp(0.25rem, 0.5vh, 0.4rem);
+}
+
+/* GTM stage marker (current position) */
+.gtm-now-marker {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    font-size: var(--label-size);
+    font-weight: 800;
+    color: var(--ac);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+}
+.gtm-now-marker::before {
+    content: '';
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--ac);
+    box-shadow: 0 0 8px var(--ac-glow);
+    animation: pulse 1.6s ease-in-out infinite;
+}
+@keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.55; transform: scale(1.2); }
+}
+
+/* ===========================================
+   PROGRESS BAR + NAV DOTS + KB HINT
+   =========================================== */
+.progress-bar {
+    position: fixed;
+    top: 0; left: 0;
+    height: 2px;
+    background: var(--ac);
+    z-index: 100;
+    transition: width 0.3s ease;
+    box-shadow: 0 0 8px var(--ac-glow);
+}
+
+.nav-dots {
+    position: fixed;
+    right: clamp(0.8rem, 1.5vw, 1.2rem);
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    z-index: 90;
+}
+.nav-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--bb);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+    padding: 0;
+}
+.nav-dot.active {
+    background: var(--ac);
+    transform: scale(1.5);
+    box-shadow: 0 0 8px var(--ac-glow);
+}
+.nav-dot:hover { background: var(--t-md); }
+
+.kb-hint {
+    position: fixed;
+    bottom: clamp(0.8rem, 1.8vh, 1.2rem);
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: var(--label-size);
+    color: var(--t-faint);
+    letter-spacing: 0.04em;
+    z-index: 90;
+    opacity: 0;
+    pointer-events: none;
+    visibility: hidden;
+}
+.kb-hint kbd {
+    background: var(--bg-2);
+    border: 1px solid var(--bb);
+    border-radius: 3px;
+    padding: 1px 8px;
+    margin: 0 0.25em;
+    font-family: inherit;
+    font-size: 0.95em;
+}
+body.scrolled .kb-hint { opacity: 0; transition: opacity 0.5s; }
+</style>
+</head>
+<body>
+
+<!-- Top chrome -->
+<div class="progress-bar" id="progressBar"></div>
+<nav class="nav-dots" id="navDots" aria-label="슬라이드 네비게이션"></nav>
+<div class="kb-hint"><kbd>↓</kbd> <kbd>Space</kbd> 다음 · <kbd>↑</kbd> 이전</div>
+
+<!-- ===========================================
+     SLIDE 01 — COVER
+     =========================================== -->
+<section class="slide cover" data-slide="1">
+    <div class="slide-content">
+        <div class="cover-eyebrow reveal">Trust × Customer Discovery — 2차 미션</div>
+        <h1 class="cover-title reveal">
+            우리가 알던 고객은,
+            <em>우리가 알던 그 사람이 아니었습니다.</em>
+        </h1>
+        <p class="cover-sub reveal">
+            <strong>설문 60명, 심층 인터뷰 12명, 가설 4개.</strong><br>
+            3주 동안 시장에 직접 물었고, 찾은 답은 제품에 반영했습니다.
+        </p>
+    </div>
+    <div class="cover-meta">
+        <div class="cover-meta-block">
+            <span class="label">발표자</span>
+            <span class="value">정진협</span>
+            <span class="sub">Stones Lab · Founder / PM</span>
+        </div>
+        <div class="cover-brand">TRUST<span class="ac">.</span></div>
+        <div class="cover-meta-block" style="text-align:right;">
+            <span class="label">2026.05.07</span>
+            <span class="value">E5 KAIST 2차 미션</span>
+            <span class="sub">KAIST DFMBA 8기</span>
+        </div>
+    </div>
+</section>
+
+<!-- ===========================================
+     SLIDE 02 — STAKES
+     =========================================== -->
+<section class="slide" data-slide="2">
+    <div class="brand-mark">TRUST<span class="ac">.</span></div>
+    <div class="slide-content">
+        <div class="slide-header reveal">
+            <span class="num">02</span>
+            <span class="divider-line"></span>
+            <span class="section-label">시장의 위태로움</span>
+        </div>
+        <h2 class="slide-h2 reveal">AI로 바이브 코딩한 소스 코드, <span class="ac">이미 절반이 취약합니다.</span></h2>
+
+        <div class="stakes-row">
+            <div class="stat-block reveal">
+                <div class="stat-num">45<small>%</small></div>
+                <div class="stat-label">AI 생성 코드가 OWASP Top 10 취약점을 포함</div>
+                <div class="stat-source">Veracode GenAI Code Security Report · 2026</div>
+            </div>
+            <div class="stat-block reveal">
+                <div class="stat-num">18,000<small>명</small></div>
+                <div class="stat-label">Lovable 한 앱에서 한 번에 유출된 사용자 수</div>
+                <div class="stat-source">The Register · 2026.02.27</div>
+            </div>
+            <div class="stat-block reveal">
+                <div class="stat-num">2,000<small>건</small></div>
+                <div class="stat-label">vibe 앱 5,600개 스캔에서 발견된 고위험 취약점</div>
+                <div class="stat-source">Escape.tech · State of Vibe-Coded Apps</div>
+            </div>
+        </div>
+
+        <div class="stakes-bottom reveal">이 시장이 <span class="ac">우리가 풀어야 할 시장</span>입니다.</div>
+        <div class="slide-flow-hint">다음 <span class="arr">→</span> 우리가 답해야 할 4개 질문</div>
+    </div>
+</section>
+
+<!-- ===========================================
+     SLIDE 03 — MISSION
+     =========================================== -->
+<section class="slide" data-slide="3">
+    <div class="brand-mark">TRUST<span class="ac">.</span></div>
+    <div class="slide-content">
+        <div class="slide-header reveal">
+            <span class="num">03</span>
+            <span class="divider-line"></span>
+            <span class="section-label">우리가 답해야 할 질문</span>
+        </div>
+        <h2 class="slide-h2 reveal">몇 명을 만났는가보다, <span class="ac">밀도있는 가설 검증</span>에 집중했습니다.</h2>
+
+        <div class="mentor-quote reveal">
+            <div class="mentor-quote-text">
+                "트랙션이 본질입니다. 인터뷰 자체를 투자자는 그렇게 높게 보지 않아요.
+                그 가설을 어떻게 데이터로 증명했는지를 봅니다."
+            </div>
+            <div class="mentor-quote-attr">— <strong>변상훈</strong> 멘토 · 한국투자증권 · 2026.04.07</div>
+        </div>
+
+        <div class="flow-arrow-down reveal">
+            <span class="line"></span>
+            <span class="glyph">우리가 시장에 던진 4개 질문</span>
+            <span class="chevron"></span>
+            <span class="line"></span>
+        </div>
+
+        <div class="q-grid">
+            <div class="q-card reveal">
+                <div class="q-num">Q · 01</div>
+                <div class="q-text">페르소나는 실재하는가?</div>
+                <div class="q-detail">바이브코더라는 세그먼트가 측정 가능한 시장인지</div>
+            </div>
+            <div class="q-card reveal">
+                <div class="q-num">Q · 02</div>
+                <div class="q-text">월 9.9달러를 낼 의사가 있는가?</div>
+                <div class="q-detail">지불 의향과, 그 의향을 만드는 조건이 무엇인지</div>
+            </div>
+            <div class="q-card reveal">
+                <div class="q-num">Q · 03</div>
+                <div class="q-text">우리만의 해자가 있는가?</div>
+                <div class="q-detail">오픈소스를 베이스로 하는 후발주자에 대한 방어선</div>
+            </div>
+            <div class="q-card reveal">
+                <div class="q-num">Q · 04</div>
+                <div class="q-text">3개월 이상 쓸 이유가 있는가?</div>
+                <div class="q-detail">사고가 안 나는 시기에도 가치가 유지되는 구조</div>
+            </div>
+        </div>
+        <div class="slide-flow-hint">다음 <span class="arr">→</span> 4가지 방법으로 답을 좁혔습니다</div>
+    </div>
+</section>
+
+<!-- ===========================================
+     SLIDE 04 — METHOD (UPDATED: 60 survey, 12 deep interviews)
+     =========================================== -->
+<section class="slide" data-slide="4">
+    <div class="brand-mark">TRUST<span class="ac">.</span></div>
+    <div class="slide-content">
+        <div class="slide-header reveal">
+            <span class="num">04</span>
+            <span class="divider-line"></span>
+            <span class="section-label">방법론</span>
+        </div>
+        <h2 class="slide-h2 reveal">같은 가설을 <span class="ac">4개의 서로 다른 각도</span>로 분석했습니다.</h2>
+        <p class="slide-sub reveal">같은 가설을 <strong>네 가지 다른 각도</strong>로 확인했습니다. 정량·정성·외부 멘토 의견을 한 곳에 모아 결론을 좁혔습니다.</p>
+
+        <div class="method-grid">
+            <div class="method-card reveal">
+                <div class="method-num">TRACK · 01</div>
+                <div class="method-stat">$3B<small>+ ARR</small></div>
+                <div class="method-title">데스크 리서치</div>
+                <ul class="method-bullets">
+                    <li>AI 코딩 시장 규모 추산</li>
+                    <li>경쟁사 13종 가격 비교</li>
+                    <li>관련 규제 5종 정리</li>
+                </ul>
+                <div class="mini-evidence" title="설문 정보 정의 캡처">
+                    <img src="assets/survey-info.png" alt="설문 정보 정의">
+                </div>
+            </div>
+            <div class="method-card reveal">
+                <div class="method-num">TRACK · 02</div>
+                <div class="method-stat">60<small>명</small></div>
+                <div class="method-title">정량 설문</div>
+                <ul class="method-bullets">
+                    <li>30개 질문 · Google Forms</li>
+                    <li>카카오 오픈채팅 + 디스콰이엇 섭외</li>
+                    <li>응답 기간 4/21–4/27</li>
+                </ul>
+                <div class="mini-evidence" title="설문 목적 정의 캡처">
+                    <img src="assets/survey-purpose.png" alt="설문 목적 정의 캡처">
+                </div>
+            </div>
+            <div class="method-card reveal">
+                <div class="method-num">TRACK · 03</div>
+                <div class="method-stat">12<small>명</small></div>
+                <div class="method-title">심층 인터뷰</div>
+                <ul class="method-bullets">
+                    <li>솔로프리너부터 SI 직장인까지</li>
+                    <li>1인당 평균 30~50분</li>
+                    <li>인사이트는 한 파일로 종합</li>
+                </ul>
+                <div class="mini-evidence" title="카카오 오픈채팅 섭외">
+                    <img src="assets/recruit-kakao.png" alt="카카오 오픈채팅 섭외">
+                </div>
+            </div>
+            <div class="method-card reveal">
+                <div class="method-num">TRACK · 04</div>
+                <div class="method-stat">2<small>건</small></div>
+                <div class="method-title">외부 멘토링</div>
+                <ul class="method-bullets">
+                    <li>500 Global · 시장 개화 시점</li>
+                    <li>한국투자증권 · 진짜 고객 발견</li>
+                    <li>총 2시간 라이브</li>
+                </ul>
+                <div class="mini-evidence quote" title="멘토 인용">
+                    <div class="quote-text">&ldquo;트랙션이 본질입니다.&rdquo;</div>
+                    <div class="quote-source">— 변상훈 (한국투자증권)</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide-flow-hint">다음 <span class="arr">→</span> 설문 결과 ① 시장의 형태</div>
+    </div>
+</section>
+
+<!-- ===========================================
+     SLIDE 05 — DONUTS (was 6, N=60 updated)
+     =========================================== -->
+<section class="slide" data-slide="5">
+    <div class="brand-mark">TRUST<span class="ac">.</span></div>
+    <div class="slide-content">
+        <div class="slide-header reveal">
+            <span class="num">05</span>
+            <span class="divider-line"></span>
+            <span class="section-label">설문 결과 ① — 시장의 형태</span>
+        </div>
+        <h2 class="slide-h2 reveal">바이브코더는 <span class="ac">보안까지 혼자 책임지고 있었습니다.</span></h2>
+
+        <div class="donut-row">
+            <div class="donut-block reveal">
+                <div class="donut">
+                    <div class="donut-ring" style="--p: 92%"></div>
+                    <div class="donut-val">92%</div>
+                </div>
+                <div class="donut-label">1인 개발자</div>
+                <div class="donut-detail">60명 중 55명</div>
+            </div>
+            <div class="donut-block reveal">
+                <div class="donut">
+                    <div class="donut-ring" style="--p: 92%"></div>
+                    <div class="donut-val">92%</div>
+                </div>
+                <div class="donut-label">보안 전담 인력 부재</div>
+                <div class="donut-detail">60명 중 55명</div>
+            </div>
+            <div class="donut-block reveal">
+                <div class="donut">
+                    <div class="donut-ring" style="--p: 75%"></div>
+                    <div class="donut-val">75%</div>
+                </div>
+                <div class="donut-label">책임을 본인이 진다</div>
+                <div class="donut-detail">60명 중 45명</div>
+            </div>
+        </div>
+
+        <div class="takeaway-band reveal">
+            <span class="lead">→ 인사이트</span>
+            바이브코더는 대부분 1인 개발자이며, 소규모 프로젝트라 설마 문제가 생길까 <strong>혼자 책임집니다.</strong>
+        </div>
+
+        <div class="donut-foot reveal">N=60 · GOOGLE FORMS · 2026.04.21–04.27 · 카카오 오픈채팅 + 디스콰이엇 섭외</div>
+        <div class="slide-flow-hint">다음 <span class="arr">→</span> 걱정 75%, 실행 33% — 갭이 곧 시장</div>
+    </div>
+</section>
+
+<!-- ===========================================
+     SLIDE 06 — 42%p GAP (was 7)
+     =========================================== -->
+<section class="slide" data-slide="6">
+    <div class="brand-mark">TRUST<span class="ac">.</span></div>
+    <div class="slide-content">
+        <div class="slide-header reveal">
+            <span class="num">06</span>
+            <span class="divider-line"></span>
+            <span class="section-label">설문 결과 ② — 갭</span>
+        </div>
+        <h2 class="slide-h2 reveal">걱정한다 <span class="ac">75%</span>, 실제로 한다 <span class="warn">33%</span>.</h2>
+        <p class="slide-sub reveal">
+            배포 전 보안을 걱정한다고 답한 사람은 4명 중 3명, 실제로 항상 검토한다는 사람은 3명&nbsp;중&nbsp;1명입니다.
+            걱정과 실행 사이의 거리가 시장의 크기입니다.
+        </p>
+
+        <div class="gap-viz">
+            <div class="bar-row reveal">
+                <div class="bar-label">
+                    배포 전 보안 걱정
+                    <small>"예" 응답</small>
+                </div>
+                <div class="bar-track"><div class="bar-fill" style="width: 75%"></div></div>
+                <div class="bar-val">75<span style="font-size:0.45em;">%</span></div>
+            </div>
+            <div class="bar-row reveal">
+                <div class="bar-label">
+                    실제로 항상 검토
+                    <small>"항상 한다" 응답</small>
+                </div>
+                <div class="bar-track"><div class="bar-fill warn" style="width: 33%"></div></div>
+                <div class="bar-val warn">33<span style="font-size:0.45em;">%</span></div>
+            </div>
+        </div>
+
+        <div class="gap-callout reveal">
+            <div class="gap-callout-num">42<small>%p</small></div>
+            <div class="gap-callout-text">
+                걱정하지만 실행 못 한 사람들 (60명 중 25명)
+                <small>이 사람들이 Trust의 잠재 고객입니다.</small>
+            </div>
+        </div>
+        <div class="slide-flow-hint">다음 <span class="arr">→</span> 의향은 있다, 단 조건이 있다</div>
+    </div>
+</section>
+
+<!-- ===========================================
+     SLIDE 07 — GAUGES (was 8, N=60 updated)
+     =========================================== -->
+<section class="slide" data-slide="7">
+    <div class="brand-mark">TRUST<span class="ac">.</span></div>
+    <div class="slide-content">
+        <div class="slide-header reveal">
+            <span class="num">07</span>
+            <span class="divider-line"></span>
+            <span class="section-label">설문 결과 ③ — 솔루션 매력도</span>
+        </div>
+        <h2 class="slide-h2 reveal"><span class="ac">Top of Mind의 부재</span><br>바이브코더는 보안 도구를 찾고 있지만, 시장에 등장하지 않았습니다.</h2>
+
+        <div class="gauge-row">
+            <div class="gauge reveal">
+                <div class="gauge-label">5분 URL 스캔 사용 의향</div>
+                <div class="gauge-bar"><div class="gauge-fill" style="width: 85%"></div></div>
+                <div class="gauge-foot">
+                    <div class="gauge-num">4.25<small>/5</small></div>
+                    <div class="gauge-max">60명 평균</div>
+                </div>
+            </div>
+            <div class="gauge reveal">
+                <div class="gauge-label">한국어 가이드 유용성</div>
+                <div class="gauge-bar"><div class="gauge-fill" style="width: 90%"></div></div>
+                <div class="gauge-foot">
+                    <div class="gauge-num">4.5<small>/5</small></div>
+                    <div class="gauge-max">60명 평균</div>
+                </div>
+            </div>
+            <div class="gauge reveal">
+                <div class="gauge-label">월 $9.90 구독 의향 (조건부 + 예)</div>
+                <div class="gauge-bar"><div class="gauge-fill" style="width: 75%"></div></div>
+                <div class="gauge-foot">
+                    <div class="gauge-num">75<small>%</small></div>
+                    <div class="gauge-max">60명 중 45명</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flow-arrow-down reveal">
+            <span class="line"></span>
+            <span class="glyph">그리고 경쟁자조차 없습니다</span>
+            <span class="chevron"></span>
+            <span class="line"></span>
+        </div>
+
+        <div class="aside-card reveal">
+            <div class="aside-num">84%</div>
+            <div class="aside-text">
+                60명 중 50명이 <strong>Claude Code Security · GitHub Copilot Autofix를 모릅니다.</strong>
+                경쟁이 아니라 <span class="ac">부재 시장</span>입니다.
+            </div>
+        </div>
+        <div class="slide-flow-hint">다음 <span class="arr">→</span> 12개 인터뷰를 한 곳에 모았습니다</div>
+    </div>
+</section>
+
+<!-- ===========================================
+     SLIDE 08 — INTERVIEW SYNTHESIS (was 9, REFRAMED to 12 interviews)
+     =========================================== -->
+<section class="slide" data-slide="8">
+    <div class="brand-mark">TRUST<span class="ac">.</span></div>
+    <div class="slide-content">
+        <div class="slide-header reveal">
+            <span class="num">08</span>
+            <span class="divider-line"></span>
+            <span class="section-label">심층 인터뷰</span>
+        </div>
+        <h2 class="slide-h2 reveal">12개 인터뷰를 <span class="ac">한 곳에 모았습니다.</span></h2>
+
+        <div class="interview-grid">
+            <div class="interview-card reveal">
+                <div class="interview-id">DEEP INTERVIEWS · N=12</div>
+                <div class="interview-title">서로 다른 12개의 시각.
+                    <small>솔로프리너 · SI 직장인 · 디자이너 출신 · NPM 패키지 운영자 · 보안 인지도 있는 비전문가</small>
+                </div>
+                <ul class="interview-mix">
+                    <li><strong>도구 분포</strong> Claude Code 헤비 / Cursor / Windsurf / Antigravity 등</li>
+                    <li><strong>운영 규모</strong> 사이드앱 1개부터 npm 패키지 100+개까지</li>
+                    <li><strong>보안 인식</strong> "걱정은 한다" 부터 "자체 펜테스트" 까지 스펙트럼</li>
+                    <li><strong>지불 경험</strong> Vercel · Supabase · Anthropic Max 동시 결제 사례 다수</li>
+                    <li><strong>기록</strong> 1인당 평균 30~50분 · 익명 동의 후 진행</li>
+                </ul>
+                <div class="interview-stats">
+                    <div class="interview-stat"><span class="num">12</span><span class="label">RESPONDENTS</span></div>
+                    <div class="interview-stat"><span class="num">5</span><span class="label">PERSONAS</span></div>
+                    <div class="interview-stat"><span class="num">4</span><span class="label">KEY INSIGHTS</span></div>
+                </div>
+            </div>
+            <div class="interview-img-wrap reveal">
+                <img src="assets/devin-insights.jpg" alt="12명 심층 인터뷰 인사이트 종합">
+            </div>
+        </div>
+
+        <div class="takeaway-band reveal">
+            <span class="lead">→ 인사이트</span>
+            <strong>가격 모호 · 공신력 부재 · 카피캣 위협 · 리텐션 역설</strong> — 인터뷰에서 5명의 페르소나와 4개의 인사이트를 발견했습니다.
+        </div>
+        <div class="slide-flow-hint">다음 <span class="arr">→</span> 다섯 페르소나 살펴보기</div>
+    </div>
+</section>
+
+<!-- ===========================================
+     SLIDE 09 — 5 PERSONAS (was 10, REFRAMED)
+     =========================================== -->
+<section class="slide" data-slide="9">
+    <div class="brand-mark">TRUST<span class="ac">.</span></div>
+    <div class="slide-content">
+        <div class="slide-header reveal">
+            <span class="num">09</span>
+            <span class="divider-line"></span>
+            <span class="section-label">다섯 페르소나</span>
+        </div>
+        <h2 class="slide-h2 reveal">12개 인터뷰에서 <span class="ac">다섯 페르소나</span>가 도출됐습니다.</h2>
+
+        <div class="persona-row">
+            <div class="persona-card reveal">
+                <div class="persona-tag">A · SOLO</div>
+                <div class="persona-title">솔로프리너 (1인 개발자)</div>
+                <div class="persona-meta">사이드앱 1인 운영</div>
+                <div class="persona-pain">호스팅·DB·AI 토큰까지 모두 본인 부담. 비용 폭발이 사업 종료 사유가 됩니다.</div>
+                <div class="persona-quote">Vercel 결제하자마자 첫 달부터 오버차지가 나왔어요.</div>
+            </div>
+            <div class="persona-card reveal">
+                <div class="persona-tag">B · MAINTAINER</div>
+                <div class="persona-title">NPM 패키지 운영자</div>
+                <div class="persona-meta">npm 100+ 운영</div>
+                <div class="persona-pain">의존성 취약점 하나가 100개 패키지에 동시에 영향. 추적·패치가 일정에 묶입니다.</div>
+                <div class="persona-quote">최근에 axios 털렸다고 해서 막 찾아봤어요.</div>
+            </div>
+            <div class="persona-card reveal">
+                <div class="persona-tag">C · SHIFT</div>
+                <div class="persona-title">디자이너 출신 바이브코더</div>
+                <div class="persona-meta">10년차 → 바이브코더</div>
+                <div class="persona-pain">프론트는 자신 있지만 백엔드 보안은 사각지대. AI에 의존하면서도 100% 신뢰하지 못합니다.</div>
+                <div class="persona-quote">백엔드를 못 할 때라 클라이언트 보안만 했었거든요.</div>
+            </div>
+            <div class="persona-card reveal">
+                <div class="persona-tag">D · AWARE</div>
+                <div class="persona-title">보안 인지도 있는 비전문가</div>
+                <div class="persona-meta">자체 보안 테스트 경험</div>
+                <div class="persona-pain">중요성은 인지하지만, 외부 솔루션은 비싸고 어려워 진입 장벽이 높습니다.</div>
+                <div class="persona-quote">보안이라는 게 원래 딱딱하고 어렵고 보통 비싸거든요.</div>
+            </div>
+            <div class="persona-card reveal">
+                <div class="persona-tag">E · ENTERPRISE</div>
+                <div class="persona-title">엔터프라이즈</div>
+                <div class="persona-meta">공기업·SI 직장 베이스</div>
+                <div class="persona-pain">대기업은 보안팀이 있지만 1인·중소는 처참합니다. 과징금 리스크는 동일합니다.</div>
+                <div class="persona-quote">주민번호 한 개만 노출돼도 과징금 1,000만원부터 시작이에요.</div>
+            </div>
+        </div>
+
+        <div class="persona-evidence reveal">
+            <div class="persona-evidence-img">
+                <img src="assets/persona-definition.png" alt="5 페르소나 화이트보드 정의">
+            </div>
+            <div class="persona-evidence-text">
+                <div>
+                    <div style="font-size: var(--h3-size); font-weight: 800; color: var(--ac); line-height: 1.2; letter-spacing: -0.02em;">다섯 페르소나, 같은 페인 포인트</div>
+                    <!-- <div style="font-size: var(--h3-size); font-weight: 800; color: var(--ac); line-height: 1.2; letter-spacing: -0.02em; margin-bottom: clamp(0.7rem, 1.4vh, 1.1rem);">같은 페인 포인트.</div> -->
+                    <div>5가지 페르소나는 공통적으로, <strong>1인 개발/보안 담당자</strong>이며 신뢰할 수 있는 보안 도구를 찾고 있었습니다.</div>
+                </div>
+            </div>
+        </div>
+        <div class="slide-flow-hint">다음 <span class="arr">→</span> 인사이트 ① 가격이 모호하면 안 된다</div>
+    </div>
+</section>
+
+<!-- ===========================================
+     SLIDE 10 — INSIGHT 1: 가격 모호함 (was 11)
+     =========================================== -->
+<section class="slide" data-slide="10">
+    <div class="brand-mark">TRUST<span class="ac">.</span></div>
+    <div class="slide-content">
+        <div class="slide-header reveal">
+            <span class="num">10</span>
+            <span class="divider-line"></span>
+            <span class="section-label">인사이트 ① — 가격이 모호하면 안 됩니다</span>
+        </div>
+        <h2 class="slide-h2 reveal">"9.9달러로 <span class="ac">어디까지 해주는데?</span>"</h2>
+
+        <div class="insight-grid with-flow">
+            <div class="insight-col reveal">
+                <div class="col-label">STEP 01 · 고객의 말</div>
+                <div class="quote-block">
+                    <div class="quote-mark">"</div>
+                    <div class="quote-text">
+                        9.9달러로 <strong>어디까지 해줄 건데?</strong> 그걸 모르니까.
+                        뭘 해주는지 모르니 안심하고 맡길 수 있을지 망설인 거예요.
+                    </div>
+                    <div class="quote-source">심층 인터뷰 · 솔로프리너 응답자 (40대)</div>
+                </div>
+            </div>
+            <div class="insight-arrow reveal" aria-hidden="true"></div>
+            <div class="insight-col reveal">
+                <div class="col-label">STEP 02 · 우리가 적용한 것</div>
+                <div class="applied-card">
+                    <div class="applied-title">9.9달러로 어떤 가치를 얻을 수 있는지 명시했습니다.</div>
+                    <div class="applied-grid">
+                        <div class="applied-mini">
+                            <div class="applied-mini-head">스캔 빈도</div>
+                            <div class="applied-mini-body">commit·push 자동 트리거 + 정기 스캔 포함</div>
+                        </div>
+                        <div class="applied-mini">
+                            <div class="applied-mini-head">알림 채널</div>
+                            <div class="applied-mini-body">Slack·이메일 통합, 취약점 발견 즉시 발송</div>
+                        </div>
+                        <div class="applied-mini">
+                            <div class="applied-mini-head">Fix 자동화</div>
+                            <div class="applied-mini-body">Pull Request 자동 생성</div>
+                        </div>
+                        <div class="applied-mini">
+                            <div class="applied-mini-head">SLA 명시</div>
+                            <div class="applied-mini-body">5분 내 결과 + 한국어 리포트</div>
+                        </div>
+                        <div class="applied-mini">
+                            <div class="applied-mini-head">한 줄 요약</div>
+                            <div class="applied-mini-body">"이번 달 막은 건 N건"</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slide-flow-hint">다음 <span class="arr">→</span> 인사이트 ② 공신력</div>
+    </div>
+</section>
+
+<!-- ===========================================
+     SLIDE 11 — INSIGHT 2: 공신력 (was 12)
+     =========================================== -->
+<section class="slide" data-slide="11">
+    <div class="brand-mark">TRUST<span class="ac">.</span></div>
+    <div class="slide-content">
+        <div class="slide-header reveal">
+            <span class="num">11</span>
+            <span class="divider-line"></span>
+            <span class="section-label">인사이트 ② — 공신력</span>
+        </div>
+        <h2 class="slide-h2 reveal">검증마크는 <span class="ac">KISA·정부 인증</span>이 있어야 진짜입니다.</h2>
+
+        <div class="insight-grid with-flow">
+            <div class="insight-col reveal">
+                <div class="col-label">STEP 01 · 고객의 말</div>
+                <div class="quote-block">
+                    <div class="quote-mark">"</div>
+                    <div class="quote-text">
+                        지금은 <strong>사설 자격증 같은 느낌</strong>이에요.
+                        공신력이 생기려면 KISA 같은 곳에서 인증을 받아야
+                        사람들이 "여기서 검증받았더라"라고 기억합니다.
+                    </div>
+                    <div class="quote-source">심층 인터뷰 · 솔로프리너 응답자 (40대)</div>
+                </div>
+            </div>
+            <div class="insight-arrow reveal" aria-hidden="true"></div>
+            <div class="insight-col reveal">
+                <div class="col-label">STEP 02 · 규제 테일윈드 — 우리에게 유리한 시점</div>
+                <div class="applied-card">
+                    <div class="applied-title">2026년 하반기, 두 개의 큰 파도.</div>
+                    <div class="reg-timeline">
+                        <div class="reg-item">
+                            <div class="reg-date">2026.08.02</div>
+                            <div>
+                                <div class="reg-name">EU AI Act 시행</div>
+                                <div class="reg-detail">고위험 AI 시스템 적합성 평가 의무 · 위반 시 글로벌 매출 <strong>최대 7%</strong></div>
+                            </div>
+                        </div>
+                        <div class="reg-item">
+                            <div class="reg-date">2026.09.11</div>
+                            <div>
+                                <div class="reg-name">한국 PIPA 4차 개정</div>
+                                <div class="reg-detail">반복·중대 위반 시 과징금 매출 3% → <strong>10%</strong></div>
+                            </div>
+                        </div>
+                        <div class="reg-item">
+                            <div class="reg-date">→ 인사이트</div>
+                            <div>
+                                <div class="reg-name">보안을 미룰수록 비용이 커지는 시기입니다</div>
+                                <div class="reg-detail">KISA 인증 트랙 검토 + 규제 테일윈드 서사를 IR로 옮깁니다</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slide-flow-hint">다음 <span class="arr">→</span> 인사이트 ③ 카피캣 위협</div>
+    </div>
+</section>
+
+<!-- ===========================================
+     SLIDE 12 — INSIGHT 3: 카피캣 → 4중 해자 (was 13)
+     =========================================== -->
+<section class="slide" data-slide="12">
+    <div class="brand-mark">TRUST<span class="ac">.</span></div>
+    <div class="slide-content">
+        <div class="slide-header reveal">
+            <span class="num">12</span>
+            <span class="divider-line"></span>
+            <span class="section-label">인사이트 ③ — 카피캣 위협</span>
+        </div>
+        <h2 class="slide-h2 reveal">따라올 수 있습니다. <span class="ac">해자가 필요합니다.</span></h2>
+
+        <div class="insight-grid with-flow">
+            <div class="insight-col reveal">
+                <div class="col-label">STEP 01 · 고객이 역으로 던진 조언</div>
+                <div class="quote-block">
+                    <div class="quote-mark">"</div>
+                    <div class="quote-text">
+                        오픈소스 기반이라는 건 어쨌든 공개를 어느 정도 하시는 거잖아요.
+                        그러면 카피캣이 나왔을 때
+                        <strong>다른 사람이 못 따라오는 해자가 있어야 됩니다.</strong>
+                    </div>
+                    <div class="quote-source">심층 인터뷰 · 솔로프리너 응답자 (40대)</div>
+                </div>
+            </div>
+            <div class="insight-arrow reveal" aria-hidden="true"></div>
+            <div class="insight-col reveal">
+                <div class="col-label">STEP 02 · 우리가 적용한 것 — 4중 해자</div>
+                <div class="applied-card">
+                    <div class="applied-title">쉽게 따라올 수 없는 네 가지 자산.</div>
+                    <div class="moat-grid">
+                        <div class="moat-card">
+                            <div class="moat-num">해자 · 01</div>
+                            <div class="moat-title">한국어 콘텐츠</div>
+                            <div class="moat-detail">한국어 가이드 유용성 4.5/5 (정량 근거)</div>
+                        </div>
+                        <div class="moat-card">
+                            <div class="moat-num">해자 · 02</div>
+                            <div class="moat-title">워크플로우 락인</div>
+                            <div class="moat-detail">CICD 파이프라인 인입 + Vercel·GitHub 깊은 통합</div>
+                        </div>
+                        <div class="moat-card">
+                            <div class="moat-num">해자 · 03</div>
+                            <div class="moat-title">데이터</div>
+                            <div class="moat-detail">한국 바이브코더 행동 데이터 누적, 후발주자는 0에서 시작</div>
+                        </div>
+                        <div class="moat-card">
+                            <div class="moat-num">해자 · 04</div>
+                            <div class="moat-title">5 페르소나 정밀 매핑</div>
+                            <div class="moat-detail">글로벌 경쟁자보다 한국 시장에 깊다</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slide-flow-hint">다음 <span class="arr">→</span> 인사이트 ④ 리텐션의 역설</div>
+    </div>
+</section>
+
+<!-- ===========================================
+     SLIDE 13 — INSIGHT 4: 리텐션 역설 (was 14)
+     =========================================== -->
+<section class="slide" data-slide="13">
+    <div class="brand-mark">TRUST<span class="ac">.</span></div>
+    <div class="slide-content">
+        <div class="slide-header reveal">
+            <span class="num">13</span>
+            <span class="divider-line"></span>
+            <span class="section-label">인사이트 ④ — 리텐션의 역설</span>
+        </div>
+        <h2 class="slide-h2 reveal">보안은 사고가 없으면 <span class="ac">가치가 보이지 않습니다.</span></h2>
+
+        <div class="insight-grid with-flow">
+            <div class="insight-col reveal">
+                <div class="col-label">STEP 01 · 고객의 말</div>
+                <div class="quote-block">
+                    <div class="quote-mark">"</div>
+                    <div class="quote-text">
+                        <strong>아무 일도 안 일어나면 이걸 내가 왜 써야 되거든요.</strong>
+                        보안은 특히 그렇잖아요. 발생 안 했어. 돈은 나가는데
+                        이게 제대로 나가는 건가. 굉장히 고민될 부분입니다.
+                    </div>
+                    <div class="quote-source">심층 인터뷰 · 솔로프리너 응답자 (40대)</div>
+                </div>
+            </div>
+            <div class="insight-arrow reveal" aria-hidden="true"></div>
+            <div class="insight-col reveal">
+                <div class="col-label">STEP 02 · 우리가 적용한 것</div>
+                <div class="applied-card">
+                    <div class="applied-title">콘텐츠로 문제를 보여줍니다.</div>
+                    <div class="applied-grid">
+                        <div class="applied-mini">
+                            <div class="applied-mini-head">매월 보안 동향 리포트</div>
+                            <div class="applied-mini-body">한국어로 "이번 달 막은 것" 시각화</div>
+                        </div>
+                        <div class="applied-mini">
+                            <div class="applied-mini-head">의존성 모니터링 알림</div>
+                            <div class="applied-mini-body">사용자 패키지에 신규 CVE 발생 시 알림</div>
+                        </div>
+                        <div class="applied-mini">
+                            <div class="applied-mini-head">한국어 보안 콘텐츠</div>
+                            <div class="applied-mini-body">Hada·디스콰이엇 정기 게시 운영</div>
+                        </div>
+                        <div class="applied-mini">
+                            <div class="applied-mini-head">이번 주 사고 사례</div>
+                            <div class="applied-mini-body">비전문가가 이해할 수 있는 형식으로 1건</div>
+                        </div>
+                        <div class="applied-mini note">
+                            <div class="applied-mini-body">→ 문제가 보일 때 가치도 보입니다</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slide-flow-hint">다음 <span class="arr">→</span> 가설 4개의 최종 판정</div>
+    </div>
+</section>
+
+<!-- ===========================================
+     SLIDE 14 — HYPOTHESIS BOARD (was 15)
+     =========================================== -->
+<section class="slide" data-slide="14">
+    <div class="brand-mark">TRUST<span class="ac">.</span></div>
+    <div class="slide-content">
+        <div class="slide-header reveal">
+            <span class="num">14</span>
+            <span class="divider-line"></span>
+            <span class="section-label">가설 판정</span>
+        </div>
+        <h2 class="slide-h2 reveal">가설 4개 중 <span class="ac">3개는 통과</span>, 나머지 1개는 기각되었습니다.</h2>
+
+        <div class="hyp-table">
+            <div class="hyp-row passed reveal">
+                <div class="hyp-id">H1</div>
+                <div class="hyp-text">바이브코더 페르소나는 실재한다</div>
+                <div class="hyp-status passed"><span class="icon">✓</span>Passed</div>
+                <div class="hyp-evidence">설문 <strong>75%</strong>가 "배포 전 보안 걱정함" + 12개 인터뷰가 5개 페르소나로 정리됨</div>
+            </div>
+            <div class="hyp-row passed reveal">
+                <div class="hyp-id">H2</div>
+                <div class="hyp-text">월 9.9달러를 낼 의사가 있다</div>
+                <div class="hyp-status passed"><span class="icon">✓</span>Passed</div>
+                <div class="hyp-evidence"><strong>75%</strong>가 조건부+예. 단 "조건"이 핵심 — 인사이트 ①로 풀었습니다</div>
+            </div>
+            <div class="hyp-row warn reveal">
+                <div class="hyp-id">H3</div>
+                <div class="hyp-text">우리만의 해자가 있다</div>
+                <div class="hyp-status warn"><span class="icon">!</span>Rework</div>
+                <div class="hyp-evidence">오픈소스 베이스만으로는 부족. <strong>4중 해자로 재설계</strong> (인사이트 ③)</div>
+            </div>
+            <div class="hyp-row failed reveal">
+                <div class="hyp-id">H4</div>
+                <div class="hyp-text">3개월 이상 쓸 이유가 있다</div>
+                <div class="hyp-status failed"><span class="icon">×</span>Dropped</div>
+                <div class="hyp-evidence"><strong>리텐션 역설</strong> 확인 — 현 상태로는 쓸 이유 부족. <strong>콘텐츠 N종 전략</strong>으로 해소 예정 (인사이트 ④)</div>
+            </div>
+        </div>
+
+        <div class="hyp-next reveal">
+            <span class="hyp-next-tag">→ Next</span>
+            <span class="hyp-next-text">
+                채택된 가설을 <strong>제품에 녹이고</strong>, 기각된 가설은 <strong>새롭게 설정</strong>했습니다.
+            </span>
+            <span class="hyp-next-arrow">→</span>
+        </div>
+
+        <div class="hyp-foot reveal">폐기할 수 있어야 가설입니다 — Steve Blank</div>
+        <div class="slide-flow-hint">다음 <span class="arr">→</span> 발견 → 기술 → 효과</div>
+    </div>
+</section>
+
+<!-- ===========================================
+     SLIDE 15 — APPLY → LAUNCH → MEASURE
+     인사이트 적용 → PH 런칭 → 측정 결과 → 4가지 변경
+     =========================================== -->
+<section class="slide" data-slide="15">
+    <div class="brand-mark">TRUST<span class="ac">.</span></div>
+    <div class="slide-content">
+        <div class="slide-header reveal">
+            <span class="num">15</span>
+            <span class="divider-line"></span>
+            <span class="section-label">적용 → 런칭 → 측정</span>
+        </div>
+        <h2 class="slide-h2 reveal">인사이트를 적용한 제품으로, <span class="ac">시장에서 다시 검증</span>을 시작했습니다.</h2>
+
+        <div class="reveal" style="margin-top: clamp(0.7rem, 1.4vh, 1.1rem);">
+            <div class="s15-section-label">① 적용 — 콘텐츠 전략 제외, 즉시 반영</div>
+            <div class="s15-apply-grid">
+                <div class="applied-mini">
+                    <div class="applied-mini-head">인사이트 ① · 가격 모호</div>
+                    <div class="applied-mini-body">9.9달러 가치 명시 페이지</div>
+                </div>
+                <div class="applied-mini">
+                    <div class="applied-mini-head">인사이트 ③ · 카피캣 (해자)</div>
+                    <div class="applied-mini-body">GitHub OAuth 워크플로우 락인</div>
+                </div>
+                <div class="applied-mini">
+                    <div class="applied-mini-head">5 페르소나</div>
+                    <div class="applied-mini-body">GTM 전략 베이스로 정리</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="reveal" style="margin-top: clamp(0.7rem, 1.4vh, 1.1rem);">
+            <div class="s15-section-label">② 런칭 — 2026.05.01 · 글로벌 바이브코더 채널 Product Hunt</div>
+            <div class="day5-stat-strip">
+                <div class="d5s-cell">
+                    <div class="d5s-num">14</div>
+                    <div class="d5s-label">PH 유입</div>
+                </div>
+                <div class="d5s-arrow">→</div>
+                <div class="d5s-cell">
+                    <div class="d5s-num">1</div>
+                    <div class="d5s-label">가입</div>
+                </div>
+                <div class="d5s-arrow">→</div>
+                <div class="d5s-cell">
+                    <div class="d5s-num">24<span class="d5s-unit">h</span></div>
+                    <div class="d5s-label">측정·결정</div>
+                </div>
+                <div class="d5s-arrow">→</div>
+                <div class="d5s-cell highlight">
+                    <div class="d5s-num">4</div>
+                    <div class="d5s-label">변경 배포</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="reveal" style="margin-top: clamp(0.7rem, 1.4vh, 1.1rem); flex: 1; min-height: 0;">
+            <div class="s15-section-label">③ 측정 — PostHog 퍼널 이탈 추적 → 발표 36시간 전 배포</div>
+            <div class="day5-changes-grid">
+                <div class="day5-card">
+                    <div class="d5c-tag">Change 01 · 첫 클릭 'Skip'</div>
+                    <div class="d5c-bad">온보딩 오버레이가 가치 전달을 차단</div>
+                    <div class="d5c-good">→ 온보딩 오버레이 통째로 제거</div>
+                </div>
+                <div class="day5-card">
+                    <div class="d5c-tag">Change 02 · 신뢰 의심 신호</div>
+                    <div class="d5c-bad">Terms·Privacy 클릭 비정상 — "이거 진짜 작동?"</div>
+                    <div class="d5c-good">→ Supabase 라이브 카운터 (618 sites · 5,658 vulns)</div>
+                </div>
+                <div class="day5-card">
+                    <div class="d5c-tag">Change 03 · Mobb과 차별 0</div>
+                    <div class="d5c-bad">"또 다른 보안 스캐너"로 보임</div>
+                    <div class="d5c-good">→ Hero 재설계 + Mobb 비교표 + URL DAST 행</div>
+                </div>
+                <div class="day5-card">
+                    <div class="d5c-tag">Change 04 · 한국어 욕구 (5점)</div>
+                    <div class="d5c-bad">DEVIN 인터뷰 — "영어 리포트 이해 어려움"</div>
+                    <div class="d5c-good">→ EN/KO i18n switcher</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===========================================
+     SLIDE 16 — GTM ACTION PLAN
+     =========================================== -->
+<section class="slide" data-slide="16">
+    <div class="brand-mark">TRUST<span class="ac">.</span></div>
+    <div class="slide-content">
+        <div class="slide-header reveal">
+            <span class="num">16</span>
+            <span class="divider-line"></span>
+            <span class="section-label">다음 액션 — Go-to-Market</span>
+        </div>
+        <h2 class="slide-h2 reveal">Customer Discovery는 끝났습니다. <span class="ac">이제 GTM입니다.</span></h2>
+        <p class="slide-sub reveal">
+            <strong>5월 1주차, Product Hunt에 첫 깃발을 꽂았습니다.</strong> 바이브코더 채널에서 자연 반응을 듣고 단계적으로 확장합니다.
+        </p>
+
+        <div class="gtm-grid">
+            <div class="gtm-timeline">
+                <div class="gtm-step done reveal">
+                    <div class="gtm-step-when">2026.05.01</div>
+                    <div class="gtm-step-status">✓ Done</div>
+                    <div class="gtm-step-text"><strong>Product Hunt 론칭.</strong> 글로벌 메이커 커뮤니티에 첫 노출 — 트래픽·signup·반응 트래킹 시작</div>
+                </div>
+                <div class="gtm-step now reveal">
+                    <div class="gtm-step-when">5월 ~ 6월</div>
+                    <div class="gtm-step-status"><span class="gtm-now-marker">Now</span></div>
+                    <div class="gtm-step-text"><strong>1개월 오가닉 관찰.</strong> 바이브코더가 밀집한 채널(Reddit r/cursor, 디스콰이엇, Hada)에서 자연 유입 + 고객 반응 실험으로 피드백 수집·제품 개선</div>
+                </div>
+                <div class="gtm-step plan reveal">
+                    <div class="gtm-step-when">Q3 2026</div>
+                    <div class="gtm-step-status">→ Next</div>
+                    <div class="gtm-step-text"><strong>Paid 마케팅 → 시장 확장.</strong> 검증된 채널에 자본 투입, CAC/LTV 측정으로 단가 확보</div>
+                </div>
+                <div class="gtm-step plan reveal">
+                    <div class="gtm-step-when">2H 2026</div>
+                    <div class="gtm-step-status">→ Plan</div>
+                    <div class="gtm-step-text"><strong>본격 시장 진출.</strong> 러닝 누적을 바탕으로 한국 → 영어권 확장 가속, 규제 테일윈드(EU AI Act · PIPA) 라이딩</div>
+                </div>
+                <div class="gtm-step plan reveal">
+                    <div class="gtm-step-when">1H 2027</div>
+                    <div class="gtm-step-status">→ Stage</div>
+                    <div class="gtm-step-text"><strong>엔젤 투자 유치 (Seed).</strong> 트랙션·MRR·전환율을 들고 본격적인 fundraising 단계 진입</div>
+                </div>
+            </div>
+            <div class="gtm-evidence gtm-evidence-contain reveal">
+                <img src="assets/producthunt-launch.png" alt="Product Hunt 론칭 캡처">
+            </div>
+        </div>
+
+        <div class="gtm-closing reveal">
+            <div>이번 미션으로 <span class="ac">시장의 빈 자리</span>를 확인했습니다.</div>
+            <div style="margin-top: clamp(0.4rem, 0.8vh, 0.7rem);">한국에서 시작해 글로벌까지, <span class="ac">저희 팀이 직접 그 자리를 채워가겠습니다.</span></div>
+            <div style="margin-top: clamp(0.4rem, 0.8vh, 0.7rem);">측정과 반영을 멈추지 않고, <span class="ac">1년 안에 시드 단계에 도달하겠습니다.</span></div>
+        </div>
+    </div>
+</section>
+
+<!-- ===========================================
+     SLIDE 17 — CLOSING / THANK YOU
+     =========================================== -->
+<section class="slide cover" data-slide="17">
+    <div class="slide-content">
+        <div class="cover-eyebrow reveal">Trust × Customer Discovery — 2차 미션</div>
+        <h1 class="cover-title reveal" style="font-size: clamp(2.8rem, 5.5vw, 6rem); max-width: none; white-space: nowrap;">
+            감사합니다.
+        </h1>
+    </div>
+    <div class="cover-meta">
+        <div class="cover-meta-block">
+            <span class="label">팀</span>
+            <span class="value">스톤즈랩</span>
+            <span class="sub">Stones Lab</span>
+        </div>
+        <div class="cover-brand">TRUST<span class="ac">.</span></div>
+        <div class="cover-meta-block" style="text-align:right;">
+            <span class="label">발표자</span>
+            <span class="value">정진협</span>
+            <span class="sub">Founder / PM</span>
+        </div>
+    </div>
+</section>
+
+<!-- ===========================================
+     PRESENTATION CONTROLLER
+     =========================================== -->
+<script>
+class SlidePresentation {
+    constructor() {
+        this.slides = Array.from(document.querySelectorAll('.slide'));
+        this.currentIndex = 0;
+        this.progressBar = document.getElementById('progressBar');
+        this.navDotsContainer = document.getElementById('navDots');
+
+        this.setupIntersectionObserver();
+        this.setupKeyboardNav();
+        this.setupTouchNav();
+        this.setupNavDots();
+        this.setupScrollListener();
+    }
+
+    setupIntersectionObserver() {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    const idx = this.slides.indexOf(entry.target);
+                    if (idx >= 0) {
+                        this.currentIndex = idx;
+                        this.updateNavDots();
+                    }
+                }
+            });
+        }, { threshold: 0.5 });
+        this.slides.forEach(slide => observer.observe(slide));
+    }
+
+    setupKeyboardNav() {
+        document.addEventListener('keydown', (e) => {
+            if (['ArrowDown', 'PageDown', ' '].includes(e.key)) {
+                e.preventDefault();
+                this.goTo(this.currentIndex + 1);
+            } else if (['ArrowUp', 'PageUp'].includes(e.key)) {
+                e.preventDefault();
+                this.goTo(this.currentIndex - 1);
+            } else if (e.key === 'Home') {
+                e.preventDefault();
+                this.goTo(0);
+            } else if (e.key === 'End') {
+                e.preventDefault();
+                this.goTo(this.slides.length - 1);
+            }
+        });
+    }
+
+    setupTouchNav() {
+        let startY = null;
+        document.addEventListener('touchstart', (e) => { startY = e.touches[0].clientY; }, { passive: true });
+        document.addEventListener('touchend', (e) => {
+            if (startY === null) return;
+            const dy = e.changedTouches[0].clientY - startY;
+            if (Math.abs(dy) < 50) return;
+            this.goTo(this.currentIndex + (dy < 0 ? 1 : -1));
+            startY = null;
+        });
+    }
+
+    setupNavDots() {
+        // CRITICAL: clear before building.
+        this.navDotsContainer.innerHTML = '';
+        this.slides.forEach((slide, idx) => {
+            const dot = document.createElement('button');
+            dot.className = 'nav-dot';
+            dot.setAttribute('aria-label', `Slide ${idx + 1}`);
+            dot.addEventListener('click', () => this.goTo(idx));
+            this.navDotsContainer.appendChild(dot);
+        });
+        this.updateNavDots();
+    }
+
+    setupScrollListener() {
+        let scrolled = false;
+        window.addEventListener('scroll', () => {
+            this.updateProgress();
+            if (!scrolled && window.scrollY > 100) {
+                scrolled = true;
+                document.body.classList.add('scrolled');
+            }
+        }, { passive: true });
+    }
+
+    updateProgress() {
+        const max = document.documentElement.scrollHeight - window.innerHeight;
+        const pct = max > 0 ? (window.scrollY / max) * 100 : 0;
+        this.progressBar.style.width = pct + '%';
+    }
+
+    updateNavDots() {
+        Array.from(this.navDotsContainer.children).forEach((dot, idx) => {
+            dot.classList.toggle('active', idx === this.currentIndex);
+        });
+    }
+
+    goTo(idx) {
+        idx = Math.max(0, Math.min(this.slides.length - 1, idx));
+        this.slides[idx].scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => new SlidePresentation());
+</script>
+
+</body>
+</html>
